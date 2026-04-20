@@ -1,0 +1,254 @@
+---
+const posts = [
+  {
+    slug: "day2-security-gap",
+    title: "The Day 2 Security Gap in VCF 5.x",
+    excerpt: "Why most enterprises fail to implement distributed firewalling post-deployment, and how to close the gap using vDefend ATP.",
+    date: "2026-04-20",
+    tags: ["vDefend", "Security", "VCF"],
+    readTime: "8 min"
+  },
+  {
+    slug: "micro-segmentation-ignition-lock",
+    title: "Micro-segmentation: The Ignition Lock",
+    excerpt: "Treating your network like a zero-trust enclave. If you aren't segmenting the management plane, you aren't secure.",
+    date: "2026-04-12",
+    tags: ["NSX", "Zero Trust", "Micro-segmentation"],
+    readTime: "6 min"
+  }
+];
+---
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Field Notes // The Segmented Nerd</title>
+  <meta name="description" content="Technical field notes on VCF, vDefend, NSX micro-segmentation, and enterprise security architecture." />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --blue: #007aff;
+      --bg: #0d0d0d;
+      --card: #111;
+      --card-hover: #141414;
+      --border: #1a1a1a;
+      --text: #888;
+      --text-bright: #fff;
+      --text-dim: #444;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom, transparent 0px, transparent 3px,
+        rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-home { font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 2px; transition: color 0.2s; }
+    .nav-home:hover { color: var(--blue); }
+    .nav-sep { color: #222; margin: 0 10px; font-size: 0.65rem; }
+    .nav-mid { font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 2px; transition: color 0.2s; }
+    .nav-mid:hover { color: var(--blue); }
+    .nav-current { font-size: 0.65rem; color: var(--text); letter-spacing: 2px; }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 50px 40px;
+    }
+
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 30px;
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      color: var(--text-bright);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin: 0 0 6px 0;
+    }
+
+    .page-sub {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .post-count {
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    .post-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .post-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 26px 28px;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    }
+
+    .post-card:hover {
+      border-color: var(--blue);
+      background: var(--card-hover);
+      transform: translateX(5px);
+    }
+
+    .post-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .post-title {
+      color: var(--text-bright);
+      font-size: 0.92rem;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .post-date {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .post-excerpt {
+      font-size: 0.78rem;
+      color: var(--text);
+      margin: 0 0 14px 0;
+      line-height: 1.75;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .read-time {
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+
+    .tag {
+      font-size: 0.52rem;
+      color: #2e2e2e;
+      border: 1px solid #1e1e1e;
+      padding: 2px 7px;
+      letter-spacing: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .post-card:hover .tag {
+      color: rgba(0,122,255,0.5);
+      border-color: rgba(0,122,255,0.2);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+      padding: 20px 40px;
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      nav, .container, footer { padding-left: 20px; padding-right: 20px; }
+      .post-row-top { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-home">// ROOT</a>
+    <span class="nav-sep">/</span>
+    <a href="/professional" class="nav-mid">PROFESSIONAL</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">FIELD NOTES</span>
+  </nav>
+
+  <div class="container">
+
+    <header class="page-header">
+      <h1 class="page-title">[ FIELD NOTES ]</h1>
+      <p class="page-sub">// TECHNICAL WRITING ON VCF, VDEFEND, AND ENTERPRISE SECURITY</p>
+    </header>
+
+    <p class="post-count">// {posts.length} ENTRIES</p>
+
+    <div class="post-list">
+      {posts.map(post => (
+        <a href={`/blog/${post.slug}`} class="post-card">
+          <div class="post-row-top">
+            <h2 class="post-title">{post.title}</h2>
+            <span class="post-date">{post.date}</span>
+          </div>
+          <p class="post-excerpt">{post.excerpt}</p>
+          <div class="post-footer">
+            <span class="read-time">{post.readTime} read</span>
+            <div class="tags">
+              {post.tags.map(tag => <span class="tag">#{tag.toUpperCase()}</span>)}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+
+  <footer>
+    <span>// THE SEGMENTED NERD</span>
+    <span>thesegmentednerd.com</span>
+  </footer>
+
+</body>
+</html>
