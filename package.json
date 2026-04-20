@@ -1,0 +1,17 @@
+{
+  "name": "the-segmented-nerd",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.0.0",
+    "@astrojs/cloudflare": "^13.0.0",
+    "sharp": "^0.33.0"
+  }
+}
