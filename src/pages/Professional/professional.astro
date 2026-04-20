@@ -1,0 +1,98 @@
+---
+const title = "ENTERPRISE ARCHITECTURE // VCF & VDEFEND";
+const status = "VERIFIED_STAFF_TAM";
+---
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --blue: #007aff; --bg: #0d0d0d; --card: #161616; --border: #222; --text: #b0b0b0; }
+        body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; margin: 0; padding: 40px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { color: #fff; font-size: 1.1rem; margin: 0; letter-spacing: 2px; }
+        .badge { font-size: 0.6rem; color: var(--blue); border: 1px solid var(--blue); padding: 4px 10px; border-radius: 2px; font-weight: bold; }
+        
+        .hero { background: rgba(0, 122, 255, 0.05); border: 1px solid var(--blue); padding: 30px; margin-bottom: 40px; position: relative; }
+        .hero h2 { color: var(--blue); font-size: 0.9rem; margin-top: 0; text-transform: uppercase; }
+        
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .field-notes h3 { color: #fff; font-size: 0.85rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .note-card { background: var(--card); border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; transition: 0.3s; cursor: pointer; }
+        .note-card:hover { border-color: var(--blue); transform: translateX(5px); }
+        .note-card h4 { color: #fff; margin: 0 0 10px 0; font-size: 0.95rem; }
+        .note-card p { font-size: 0.85rem; margin-bottom: 15px; }
+        .meta { font-size: 0.7rem; color: #555; display: flex; gap: 15px; }
+        
+        .sidebar-section { background: #111; border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; }
+        .sidebar-section h3 { font-size: 0.75rem; color: var(--blue); margin-top: 0; }
+        ul { list-style: none; padding: 0; font-size: 0.8rem; }
+        li { margin-bottom: 10px; display: flex; align-items: center; }
+        li::before { content: ">"; color: var(--blue); margin-right: 8px; font-weight: bold; }
+        
+        .nav-back { position: fixed; top: 20px; left: 20px; font-size: 0.7rem; color: #444; text-decoration: none; }
+        .nav-back:hover { color: var(--blue); }
+    </style>
+</head>
+<body>
+    <a href="/" class="nav-back">// RETURN_TO_ROOT</a>
+    <div class="container">
+        <header>
+            <div>
+                <h1>[ {title} ]</h1>
+            </div>
+            <div class="badge">{status}</div>
+        </header>
+
+        <div class="hero">
+            <h2>Current Focus</h2>
+            <p>I specialize in the adoption of enterprise-grade software architectures, specifically focusing on the intersection of virtualization, micro-segmentation, and application networking within the VMware Cloud Foundation (VCF) stack.</p>
+        </div>
+
+        <div class="grid">
+            <section class="field-notes">
+                <h3>Latest Field Notes</h3>
+                
+                <div class="note-card">
+                    <h4>The Day 2 Security Gap in VCF 5.x</h4>
+                    <p>Why most enterprises fail to implement distributed firewalling post-deployment, and how to close the gap using vDefend ATP.</p>
+                    <div class="meta">
+                        <span>DATE: 2026-04-20</span>
+                        <span>TAGS: #VDEFEND #SECURITY</span>
+                    </div>
+                </div>
+
+                <div class="note-card">
+                    <h4>Micro-segmentation: The Ignition Lock</h4>
+                    <p>Treating your networking like a zero-trust enclave. If you aren't segmenting management, you aren't secure.</p>
+                    <div class="meta">
+                        <span>DATE: 2026-04-12</span>
+                        <span>TAGS: #NSX #ZERO_TRUST</span>
+                    </div>
+                </div>
+            </section>
+
+            <aside>
+                <div class="sidebar-section">
+                    <h3>Core Competencies</h3>
+                    <ul>
+                        <li>VCF Stack Architecture</li>
+                        <li>NSX-T / NSX-V Migration</li>
+                        <li>vDefend ATP Implementation</li>
+                        <li>Kubernetes on vSphere</li>
+                        <li>Automation (Python/PowerShell)</li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section" style="border-color: #333; opacity: 0.7;">
+                    <h3>Upcoming VMUGs</h3>
+                    <p style="font-size: 0.75rem;">Check back for session updates and technical deep-dives.</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>
