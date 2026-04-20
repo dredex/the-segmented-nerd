@@ -1,33 +1,76 @@
 ---
-const title = "The Segmented Nerd";
+const siteTitle = "THE SEGMENTED NERD";
+const currentStatus = "SYSTEMS_ONLINE";
 ---
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{title}</title>
-		<style>
-			body { font-family: 'IBM Plex Mono', monospace; background: #1a1a1a; color: #e0e0e0; padding: 2rem; line-height: 1.6; }
-			h1 { color: #00ff41; border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
-			.card { background: #2a2a2a; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #00ff41; margin-bottom: 2rem; }
-			.hobby-tag { background: #333; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin-right: 0.5rem; }
-		</style>
-	</head>
-	<body>
-		<h1>THE SEGMENTED NERD</h1>
-		<p>Staff Technical Account Manager | Woodworker | 3D Printing Enthusiast</p>
-		
-		<div class="card">
-			<h2>Field Note: Why 'Any-Any' is a Liability</h2>
-			<p>In VCF 5.x, vDefend isn't just a firewall; it's your ignition lock. If your vCenter can talk to your Guest Wi-Fi, you haven't built a cloud; you've built a liability.</p>
-			<a href="#" style="color: #00ff41;">Read More...</a>
-		</div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{siteTitle}</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --green: #00ff41; --bg: #0a0a0a; --card: #141414; --border: #222; --text: #a0a0a0; }
+        body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .dashboard { width: 100%; max-width: 1000px; padding: 20px; border: 1px solid var(--border); background: #0f0f0f; position: relative; }
+        .header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { color: var(--green); margin: 0; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; }
+        .status { font-size: 0.7rem; background: rgba(0, 255, 65, 0.1); color: var(--green); padding: 4px 8px; border: 1px solid var(--green); border-radius: 3px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; position: relative; overflow: hidden; }
+        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--border); transition: background 0.3s; }
+        .card:hover::before { background: var(--green); }
+        .card:hover { border-color: #333; }
+        h2 { color: #fff; font-size: 0.9rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        p { font-size: 0.85rem; line-height: 1.5; margin: 0 0 15px 0; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { font-size: 0.65rem; color: #666; border: 1px solid #333; padding: 2px 6px; }
+        footer { margin-top: 40px; font-size: 0.7rem; color: #444; border-top: 1px solid var(--border); padding-top: 10px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>{siteTitle}</h1>
+            <div class="status">{currentStatus}</div>
+        </div>
 
-		<div class="card" style="border-left-color: #ff9f00;">
-			<h2>The Shop & Lab</h2>
-			<p>Recent Build: 1x4 Lego Display for the boys. Functional Print: F-350 Center Console Bracket (PETG-CF).</p>
-			<span class="hobby-tag">Woodworking</span><span class="hobby-tag">3D Printing</span>
-		</div>
-	</body>
+        <div class="grid">
+            <div class="card">
+                <h2>01 // FIELD NOTES</h2>
+                <p>Enterprise virtualization, VCF stack architecture, and distributed security implementation.</p>
+                <div class="tags">
+                    <span class="tag">#VDEFEND</span><span class="tag">#NSX</span><span class="tag">#ZERO_TRUST</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>02 // THE SHOP</h2>
+                <p>Custom woodworking projects. 1x4 builds, Lego displays, and shop organization.</p>
+                <div class="tags">
+                    <span class="tag">#WOODWORKING</span><span class="tag">#FURNITURE</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>03 // THE LAB</h2>
+                <p>Functional 3D printing for household and shop efficiency using PETG-CF and Nylon.</p>
+                <div class="tags">
+                    <span class="tag">#BAMBU_LAB</span><span class="tag">#3D_PRINTING</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>04 // THE FLEET</h2>
+                <p>Maintenance and DIY logs for the 2019 F-350 Diesel and 2020 Sequoia TRD Pro.</p>
+                <div class="tags">
+                    <span class="tag">#6.7L_POWERSTROKE</span><span class="tag">#TOYOTA_TRD</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 // JOSHUA D. GREEN // STAFF TECHNICAL ADOPTION MANAGER
+        </footer>
+    </div>
+</body>
 </html>
- 
