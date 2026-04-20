@@ -1,6 +1,5 @@
 ---
 const siteTitle = "THE SEGMENTED NERD";
-const currentStatus = "SYSTEMS_ONLINE";
 ---
 <html lang="en">
 <head>
@@ -9,68 +8,38 @@ const currentStatus = "SYSTEMS_ONLINE";
     <title>{siteTitle}</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #00ff41; --bg: #0a0a0a; --card: #141414; --border: #222; --text: #a0a0a0; }
-        body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .dashboard { width: 100%; max-width: 1000px; padding: 20px; border: 1px solid var(--border); background: #0f0f0f; position: relative; }
-        .header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { color: var(--green); margin: 0; font-size: 1.2rem; letter-spacing: 3px; font-weight: 700; }
-        .status { font-size: 0.7rem; background: rgba(0, 255, 65, 0.1); color: var(--green); padding: 4px 8px; border: 1px solid var(--green); border-radius: 3px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; position: relative; overflow: hidden; }
-        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--border); transition: background 0.3s; }
-        .card:hover::before { background: var(--green); }
-        .card:hover { border-color: #333; }
-        h2 { color: #fff; font-size: 0.9rem; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
-        p { font-size: 0.85rem; line-height: 1.5; margin: 0 0 15px 0; }
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { font-size: 0.65rem; color: #666; border: 1px solid #333; padding: 2px 6px; }
-        footer { margin-top: 40px; font-size: 0.7rem; color: #444; border-top: 1px solid var(--border); padding-top: 10px; text-align: right; }
+        :root { --green: #00ff41; --blue: #007aff; --bg: #0a0a0a; --border: #222; }
+        body { background: var(--bg); color: #fff; font-family: 'JetBrains Mono', monospace; margin: 0; overflow: hidden; }
+        .split-container { display: flex; height: 100vh; width: 100vw; }
+        .side { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid var(--border); position: relative; }
+        
+        /* Professional Side */
+        .pro { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc51?q=80&w=2000'); background-size: cover; }
+        .pro:hover { flex: 1.5; background: rgba(0, 122, 255, 0.1); border-color: var(--blue); }
+        .pro h2 { color: var(--blue); }
+
+        /* Personal Side */
+        .personal { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2000'); background-size: cover; }
+        .personal:hover { flex: 1.5; background: rgba(0, 255, 65, 0.1); border-color: var(--green); }
+        .personal h2 { color: var(--green); }
+
+        h2 { font-size: 1.5rem; letter-spacing: 5px; margin: 0; z-index: 2; }
+        p { font-size: 0.8rem; color: #888; margin-top: 10px; z-index: 2; }
+        .label { position: absolute; top: 20px; font-size: 0.6rem; color: #444; letter-spacing: 2px; }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="header">
-            <h1>{siteTitle}</h1>
-            <div class="status">{currentStatus}</div>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h2>01 // FIELD NOTES</h2>
-                <p>Enterprise virtualization, VCF stack architecture, and distributed security implementation.</p>
-                <div class="tags">
-                    <span class="tag">#VDEFEND</span><span class="tag">#NSX</span><span class="tag">#ZERO_TRUST</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>02 // THE SHOP</h2>
-                <p>Custom woodworking projects. 1x4 builds, Lego displays, and shop organization.</p>
-                <div class="tags">
-                    <span class="tag">#WOODWORKING</span><span class="tag">#FURNITURE</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>03 // THE LAB</h2>
-                <p>Functional 3D printing for household and shop efficiency using PETG-CF and Nylon.</p>
-                <div class="tags">
-                    <span class="tag">#BAMBU_LAB</span><span class="tag">#3D_PRINTING</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>04 // THE FLEET</h2>
-                <p>Maintenance and DIY logs for the 2019 F-350 Diesel and 2020 Sequoia TRD Pro.</p>
-                <div class="tags">
-                    <span class="tag">#6.7L_POWERSTROKE</span><span class="tag">#TOYOTA_TRD</span>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            &copy; 2026 // JOSHUA D. GREEN // STAFF TECHNICAL ADOPTION MANAGER
-        </footer>
+    <div class="split-container">
+        <a href="/professional" class="side pro">
+            <span class="label">SEGMENT_01</span>
+            <h2>[ PROFESSIONAL ]</h2>
+            <p>VCF // vDefend // Cloud Architecture</p>
+        </a>
+        <a href="/personal" class="side personal">
+            <span class="label">SEGMENT_02</span>
+            <h2>[ PERSONAL ]</h2>
+            <p>3D Printing // Woodworking // Fleet</p>
+        </a>
     </div>
 </body>
 </html>
