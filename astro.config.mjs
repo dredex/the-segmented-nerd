@@ -1,12 +1,7 @@
 import { defineConfig } from 'astro/config';
-import cloudflare from '@astrojs/cloudflare';
 
+// We are moving to a static build for maximum edge performance
 export default defineConfig({
-  output: 'server',
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-  }),
+  // No 'output' key defaults to 'static'
   site: 'https://thesegmentednerd.com'
 });
