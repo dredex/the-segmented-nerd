@@ -1,0 +1,288 @@
+---
+const siteTitle = "THE SEGMENTED NERD";
+---
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{siteTitle}</title>
+  <meta name="description" content="Technical field notes on VCF, vDefend, micro-segmentation, and whatever else is consuming the home lab." />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --blue: #007aff;
+      --green: #00ff41;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0a0a0a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.06) 3px,
+        rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    /* ── SITE HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px 40px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+      pointer-events: none;
+    }
+
+    .site-name {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+    }
+
+    /* ── SPLIT ── */
+    .split-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .side {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      overflow: hidden;
+      transition: flex 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── BACKGROUND IMAGES ── */
+    .side-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease;
+      opacity: 0.35;
+    }
+
+    .pro .side-bg {
+      /* Network/server room — good contrast, clearly "tech" */
+      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000');
+    }
+
+    .personal .side-bg {
+      background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2000');
+    }
+
+    .side:hover .side-bg {
+      opacity: 0.55;
+      transform: scale(1.04);
+    }
+
+    /* Colour tint overlay per side */
+    .side-tint {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .pro .side-tint {
+      background: radial-gradient(ellipse at center, rgba(0,122,255,0.15) 0%, transparent 70%);
+    }
+
+    .personal .side-tint {
+      background: radial-gradient(ellipse at center, rgba(0,255,65,0.1) 0%, transparent 70%);
+    }
+
+    .side:hover .side-tint { opacity: 1; }
+
+    /* Bottom gradient for text legibility */
+    .side-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.75) 0%,
+        rgba(0,0,0,0.3) 40%,
+        rgba(0,0,0,0.1) 100%
+      );
+    }
+
+    /* Inner border that appears on hover */
+    .side-border {
+      position: absolute;
+      inset: 16px;
+      border: 1px solid transparent;
+      transition: border-color 0.4s ease;
+      pointer-events: none;
+    }
+
+    .pro:hover  .side-border { border-color: rgba(0,122,255,0.35); }
+    .personal:hover .side-border { border-color: rgba(0,255,65,0.25); }
+
+    /* Vertical divider */
+    .divider {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 100vh;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(255,255,255,0.08) 20%,
+        rgba(255,255,255,0.08) 80%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 0 40px;
+      text-align: center;
+    }
+
+    .segment-label {
+      font-size: 0.55rem;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+
+    .side-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 5px;
+      margin: 0;
+      color: rgba(255,255,255,0.85);
+      transition: color 0.3s ease, letter-spacing 0.3s ease;
+      text-shadow: 0 0 40px rgba(0,0,0,0.8);
+    }
+
+    .pro:hover  .side-title { color: var(--blue); letter-spacing: 6px; }
+    .personal:hover .side-title { color: var(--green); letter-spacing: 6px; }
+
+    .side-sub {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      margin: 0;
+      letter-spacing: 1.5px;
+      transition: color 0.3s ease;
+    }
+
+    .pro:hover .side-sub     { color: rgba(0,122,255,0.8); }
+    .personal:hover .side-sub { color: rgba(0,255,65,0.7); }
+
+    .enter-btn {
+      margin-top: 8px;
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 7px 18px;
+      transition: color 0.3s ease,
+                  border-color 0.3s ease,
+                  background 0.3s ease;
+    }
+
+    .pro:hover  .enter-btn {
+      color: var(--blue);
+      border-color: rgba(0,122,255,0.4);
+      background: rgba(0,122,255,0.08);
+    }
+
+    .personal:hover .enter-btn {
+      color: var(--green);
+      border-color: rgba(0,255,65,0.3);
+      background: rgba(0,255,65,0.06);
+    }
+
+    /* Hover expand */
+    .side:hover { flex: 1.5; }
+
+    @media (max-width: 650px) {
+      .split-container { flex-direction: column; }
+      .side { flex: 1 !important; height: 50vh; }
+      .side-title { font-size: 1.1rem; letter-spacing: 3px; }
+      .site-name { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <span class="site-name">The Segmented Nerd</span>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="split-container">
+
+    <a href="/professional" class="side pro">
+      <div class="side-bg"></div>
+      <div class="side-tint"></div>
+      <div class="side-gradient"></div>
+      <div class="side-border"></div>
+      <div class="content">
+        <span class="segment-label">SEGMENT_01</span>
+        <h2 class="side-title">[ PROFESSIONAL ]</h2>
+        <p class="side-sub">VCF // vDefend // Cloud Architecture</p>
+        <span class="enter-btn">ENTER →</span>
+      </div>
+    </a>
+
+    <a href="/personal" class="side personal">
+      <div class="side-bg"></div>
+      <div class="side-tint"></div>
+      <div class="side-gradient"></div>
+      <div class="side-border"></div>
+      <div class="content">
+        <span class="segment-label">SEGMENT_02</span>
+        <h2 class="side-title">[ PERSONAL ]</h2>
+        <p class="side-sub">3D Printing // Woodworking // Fleet</p>
+        <span class="enter-btn">ENTER →</span>
+      </div>
+    </a>
+
+  </div>
+</body>
+</html>

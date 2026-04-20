@@ -3,7 +3,7 @@ const post = {
   title: "The Day 2 Security Gap in VCF 5.x",
   date: "2026-04-20",
   readTime: "8 min",
-  tags: ["vDefend", "Security", "VCF", "Distributed Firewall"]
+  tags: ["vDefend", "SSP", "ATP", "VCF"]
 };
 ---
 <html lang="en">
@@ -11,7 +11,7 @@ const post = {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{post.title} // The Segmented Nerd</title>
-  <meta name="description" content="Why most enterprises fail to implement distributed firewalling post-VCF deployment, and how vDefend ATP closes the gap." />
+  <meta name="description" content="Most customers have DFW working. The gap is getting from basic firewalling into vDefend SSP and ATP — here's how." />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -19,7 +19,6 @@ const post = {
     :root {
       --blue: #007aff;
       --bg: #0d0d0d;
-      --card: #111;
       --border: #1a1a1a;
       --text: #999;
       --text-bright: #e8e8e8;
@@ -59,7 +58,6 @@ const post = {
       padding: 14px 40px;
       display: flex;
       align-items: center;
-      gap: 0;
     }
 
     nav a { font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 2px; transition: color 0.2s; }
@@ -73,7 +71,6 @@ const post = {
       padding: 60px 40px 80px;
     }
 
-    /* ── POST HEADER ── */
     .post-header { margin-bottom: 50px; }
 
     .post-meta-top {
@@ -83,12 +80,7 @@ const post = {
       margin-bottom: 20px;
     }
 
-    .meta-item {
-      font-size: 0.58rem;
-      color: var(--text-dim);
-      letter-spacing: 2px;
-    }
-
+    .meta-item { font-size: 0.58rem; color: var(--text-dim); letter-spacing: 2px; }
     .meta-sep { color: #222; }
 
     .post-title {
@@ -112,7 +104,6 @@ const post = {
 
     .post-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-    /* ── PROSE ── */
     .prose { margin-top: 40px; }
 
     .prose h2 {
@@ -143,7 +134,7 @@ const post = {
 
     .prose strong { color: var(--text-bright); font-weight: 500; }
 
-    .prose ul, .prose ol {
+    .prose ul {
       margin: 0 0 18px 0;
       padding-left: 0;
       list-style: none;
@@ -166,12 +157,9 @@ const post = {
       font-weight: 700;
     }
 
-    .prose ol { counter-reset: item; }
+    .prose ol { counter-reset: item; list-style: none; padding-left: 0; margin: 0 0 18px 0; }
     .prose ol li { counter-increment: item; }
-    .prose ol li::before {
-      content: counter(item) '.';
-      color: var(--blue);
-    }
+    .prose ol li::before { content: counter(item) '.'; color: var(--blue); }
 
     .callout {
       background: rgba(0,122,255,0.04);
@@ -190,14 +178,10 @@ const post = {
       margin-bottom: 8px;
     }
 
-    .callout p {
-      margin: 0;
-      font-size: 0.82rem;
-      color: #888;
-    }
+    .callout p { margin: 0; font-size: 0.82rem; color: #888; }
 
     .warning {
-      background: rgba(255, 160, 0, 0.04);
+      background: rgba(255,160,0,0.04);
       border: 1px solid rgba(255,160,0,0.15);
       border-left: 3px solid #ffa000;
       padding: 20px 24px;
@@ -216,32 +200,38 @@ const post = {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    pre {
+    /* Path diagram */
+    .path-diagram {
       background: #0a0a0a;
       border: 1px solid var(--border);
-      border-left: 3px solid #1e1e1e;
-      padding: 20px 22px;
-      overflow-x: auto;
-      margin: 24px 0;
+      padding: 24px 28px;
+      margin: 28px 0;
+      font-size: 0.75rem;
+      line-height: 2.2;
     }
 
-    pre code {
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: 0.78rem;
-      color: #666;
-      line-height: 1.8;
+    .path-diagram .path-label {
+      font-size: 0.55rem;
+      color: var(--blue);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      display: block;
     }
 
-    /* ── POST NAV ── */
+    .path-step { color: #666; }
+    .path-step.done { color: #555; }
+    .path-step.done .step-icon { color: #2a5a2a; }
+    .path-step.current { color: var(--text-bright); }
+    .path-step.current .step-icon { color: var(--blue); }
+    .path-step.next { color: #666; }
+    .step-icon { margin-right: 10px; }
+
     .post-nav {
       display: flex;
       justify-content: space-between;
       margin-top: 60px;
       padding-top: 30px;
       border-top: 1px solid var(--border);
-      gap: 20px;
     }
 
     .post-nav a {
@@ -291,206 +281,183 @@ const post = {
         <span class="meta-sep">//</span>
         <span class="meta-item">{post.readTime} READ</span>
       </div>
-
       <h1 class="post-title">{post.title}</h1>
-
       <div class="post-tags">
         {post.tags.map(tag => <span class="tag">#{tag.toUpperCase()}</span>)}
       </div>
-
       <hr class="post-divider" />
     </header>
 
     <article class="prose">
 
       <p>
-        Every VCF deployment I've walked into has the same pattern. The infrastructure team
-        nails the Day 1 build — vSAN, NSX, vCenter, SDDC Manager all humming. The cluster
-        is live, workloads are migrating, and everyone is happy. Then six months later, a
-        security audit arrives and the distributed firewall is still in <strong>Monitor Mode</strong>.
-        No rules. No enforcement. Thousands of VMs talking to each other with zero lateral
-        movement controls.
+        Here's something I see constantly when working with VCF customers: the distributed
+        firewall is running. There are rules — maybe a few hundred of them, carved out over
+        months by someone who knew what they were doing. Traffic is being filtered. The
+        environment is segmented to some degree.
       </p>
 
       <p>
-        This is the Day 2 security gap. It's not a bug in VCF. It's a process failure that
-        almost every organisation repeats.
+        And yet, <strong>vDefend's Security Services Platform (SSP) has never been touched.</strong>
+        ATP isn't enabled. Nobody has looked at the IDS/IPS dashboards. NTA has never collected
+        a flow. The advanced threat prevention layer — the part that actually catches lateral
+        movement, C2 beaconing, and exploit attempts in flight — is completely dormant.
+      </p>
+
+      <p>
+        This is the real Day 2 gap. Not "the firewall isn't configured." The firewall is
+        configured. The gap is everything sitting above the firewall that customers paid for
+        and never turned on.
       </p>
 
       <div class="callout">
-        <span class="callout-label">// KEY INSIGHT</span>
+        <span class="callout-label">// THE ACTUAL GAP</span>
         <p>
-          The distributed firewall ships enabled but in monitor-only mode. Enforcement doesn't
-          happen automatically. Someone has to make a deliberate decision to turn it on —
-          and that decision gets deferred, usually forever.
+          DFW = Layer 4 rules. You're blocking ports. That's necessary but not sufficient.
+          vDefend SSP + ATP = Layer 7 inspection, behavioural analysis, and threat intelligence.
+          Most VCF environments are running the former and ignoring the latter entirely.
         </p>
       </div>
 
-      <h2>Why Day 2 Gets Skipped</h2>
+      <h2>What the SSP Actually Is</h2>
 
       <p>
-        The reasons are predictable. Day 1 is a project with a budget, a team, and a deadline.
-        Day 2 is an operational problem that belongs to everyone and therefore no one.
-        Security teams assume the infrastructure team handled firewall policy.
-        Infrastructure teams assume security wrote the rules. Nobody wrote the rules.
+        The vDefend Security Services Platform is a dedicated appliance — a purpose-built
+        VM that deploys into your management domain and acts as the brain for advanced
+        security services. It's separate from NSX Manager. It's separate from vCenter.
+        And because it requires its own deployment step and its own licensing, it's the
+        thing that most customers skip.
       </p>
 
-      <p>There are a few structural causes that make this worse in VCF specifically:</p>
+      <p>
+        Once the SSP is running, it unlocks the components that make vDefend genuinely
+        powerful:
+      </p>
 
       <ul>
-        <li>
-          <strong>NSX onboarding doesn't enforce a policy gate.</strong> You can complete
-          the VCF bring-up workflow and never touch the distributed firewall. It simply
-          isn't a blocking step.
-        </li>
-        <li>
-          <strong>The default policy is permissive.</strong> The <code>Default Layer3 Section</code>
-          rule allows any-to-any traffic. Until you replace it, everything passes.
-        </li>
-        <li>
-          <strong>Policy design is hard.</strong> Writing firewall rules for hundreds
-          of application tiers — without breaking anything — requires application knowledge
-          most infrastructure teams don't have at deployment time.
-        </li>
-        <li>
-          <strong>No urgency until an incident.</strong> The gap is invisible until
-          a breach demonstrates why it mattered.
-        </li>
+        <li><strong>Advanced Threat Prevention (ATP)</strong> — distributed IDS/IPS running inline on every ESXi host, signature-based and behavioural detection without hairpinning traffic</li>
+        <li><strong>Network Traffic Analysis (NTA)</strong> — east-west flow baselining and anomaly detection, ML-driven, no agent required</li>
+        <li><strong>Malware Prevention</strong> — file inspection at the hypervisor layer, catches threats before they reach the guest OS</li>
+        <li><strong>NSX Intelligence (where licensed)</strong> — topology visualisation and automated rule recommendations based on observed flows</li>
       </ul>
 
-      <h2>What vDefend ATP Changes</h2>
-
       <p>
-        VMware vDefend Advanced Threat Prevention (ATP) — formerly NSX Advanced Threat
-        Prevention — is the layer that sits between the distributed firewall and the
-        threat intelligence plane. It changes the Day 2 calculus in two important ways.
+        Without the SSP, none of these work. You have a firewall. With the SSP, you have
+        a security platform.
       </p>
 
-      <h3>1. Distributed IDS/IPS Without Agent Sprawl</h3>
+      <h2>Why Nobody Gets Here</h2>
 
       <p>
-        Traditional IDS/IPS architectures require traffic to be hairpinned to a physical
-        or virtual appliance. In a flat NSX environment, east-west traffic never hits that
-        appliance. vDefend ATP runs the IDS engine directly on each ESXi host as a
-        hypervisor-native service — every packet is inspected inline, regardless of
-        whether the firewall rule explicitly matches it.
+        The SSP isn't surfaced prominently in the NSX Manager UI when you're working in
+        the distributed firewall section. Most customers find their way to
+        <code>Security → Distributed Firewall</code>, build their rules, and consider the
+        job done. The path to SSP is through a different part of the interface entirely,
+        and it's not obvious unless you already know it exists.
       </p>
 
-      <p>
-        This matters enormously for the Day 2 gap scenario. Even if your DFW policy is
-        still any-to-any, vDefend ATP is <em>watching</em> that lateral traffic and
-        alerting on known-bad patterns: SMB exploit attempts, C2 beaconing, credential
-        harvesting. You gain visibility before you gain enforcement.
-      </p>
-
-      <h3>2. Network Traffic Analysis (NTA)</h3>
-
-      <p>
-        vDefend's NTA engine builds a behavioural baseline of normal communication patterns
-        between your workloads. After a soak period (typically 7–14 days), it can recommend
-        firewall rules based on what it actually observed — not what someone guessed in a
-        Visio diagram three years ago.
-      </p>
-
-      <div class="callout">
-        <span class="callout-label">// PRACTICAL WIN</span>
-        <p>
-          NTA-generated rule recommendations have a concrete answer to the question that
-          kills most segmentation projects: "But what if we break something?" You're not
-          guessing. You're encoding observed behaviour as policy.
-        </p>
+      <div class="path-diagram">
+        <span class="path-label">// WHERE MOST CUSTOMERS STOP vs. WHERE TO GO</span>
+        <div class="path-step done"><span class="step-icon">✓</span> NSX Manager → Security → Distributed Firewall</div>
+        <div class="path-step done"><span class="step-icon">✓</span> Policy rules created, traffic filtering working</div>
+        <div class="path-step current"><span class="step-icon">→</span> NSX Manager → Security → Security Overview  <span style="color:#444">← most customers never get here</span></div>
+        <div class="path-step next"><span class="step-icon"> </span> Deploy Security Services Platform (SSP)</div>
+        <div class="path-step next"><span class="step-icon"> </span> Enable ATP profiles on transport nodes</div>
+        <div class="path-step next"><span class="step-icon"> </span> Configure IDS/IPS + NTA policies</div>
       </div>
 
-      <h2>Closing the Gap: A Practical Sequence</h2>
-
       <p>
-        Here is the sequence I recommend for environments where distributed firewalling
-        was deferred post-deployment:
+        There's also a licensing barrier that catches teams off-guard. The SSP and ATP
+        components require <strong>vDefend Advanced Threat Prevention licensing</strong>,
+        which is separate from the base VCF entitlement. Before any of this is possible,
+        that needs to be confirmed and the license applied to NSX Manager.
       </p>
 
-      <ol>
-        <li>
-          <strong>Enable vDefend ATP in monitor mode</strong> on all NSX transport nodes.
-          Don't change any firewall rules yet. Let the IDS and NTA engines collect a
-          baseline. Target: 14 days minimum.
-        </li>
-        <li>
-          <strong>Triage the IDS alerts.</strong> Anything flagged as Critical or High
-          should be investigated immediately — you may already have an active threat.
-          This is not hypothetical; I've seen live C2 traffic in "clean" environments
-          at this stage.
-        </li>
-        <li>
-          <strong>Review NTA flow recommendations</strong> in the NSX Manager UI under
-          Security → Recommendations. Group workloads into logical tiers (web, app, db,
-          management) and let NSX suggest the micro-segmentation boundaries.
-        </li>
-        <li>
-          <strong>Implement tiered segmentation in stages.</strong> Start with the
-          management plane (see the next post in this series). Then move to DMZ workloads.
-          Production application tiers last. Each stage should run in monitor mode for
-          a validation window before enforcement.
-        </li>
-        <li>
-          <strong>Replace the default any-to-any rule.</strong> Once tiered policies are
-          in place and validated, remove the default permissive rule and replace it with
-          an explicit deny. Enable enforcement mode.
-        </li>
-      </ol>
+      <h2>Getting to the SSP: Step by Step</h2>
+
+      <h3>Step 1 — Confirm Licensing</h3>
+      <p>
+        In NSX Manager, go to <code>System → Licenses</code>. You're looking for a
+        vDefend ATP or vDefend Advanced license in the list. If it's not there, stop —
+        this is a procurement conversation before it's a technical one. Your CSM or TAM
+        can pull the entitlement details from the account.
+      </p>
+
+      <h3>Step 2 — Navigate to Security Overview</h3>
+      <p>
+        From NSX Manager, go to <code>Security → Security Overview</code>. This is the
+        dashboard that shows the health of the entire vDefend stack — DFW, Gateway
+        Firewall, and SSP services. If the SSP has never been deployed, you'll see
+        grayed-out tiles for IDS/IPS and NTA. That's your starting point.
+      </p>
+
+      <h3>Step 3 — Deploy the SSP Appliance</h3>
+      <p>
+        Go to <code>System → Service Deployments → Intrusion Detection &amp; Prevention</code>.
+        From here you'll deploy the SSP VM into your management cluster. You'll need to
+        specify a datastore, a management network, and a size profile (small/medium/large
+        based on environment scale). The deployment takes around 10–15 minutes.
+      </p>
 
       <div class="warning">
-        <span class="callout-label">// CAUTION</span>
+        <span class="callout-label">// SIZING NOTE</span>
         <p>
-          Do not skip the soak-and-validate phase for each tier. Rushing to enforcement
-          on all tiers simultaneously is how organisations cause outages and then
-          abandon the project entirely.
+          Don't undersize the SSP. The small profile struggles in environments with more
+          than ~500 VMs once NTA is collecting flows at scale. If in doubt, start with
+          medium. Resizing later requires a redeployment.
         </p>
       </div>
 
-      <h2>VCF 5.x Specifics</h2>
-
+      <h3>Step 4 — Enable IDS/IPS on Transport Nodes</h3>
       <p>
-        VCF 5.x ships with NSX 4.x, which introduces a few changes that affect this workflow:
+        Once the SSP is healthy, go to <code>Security → IDS/IPS &amp; Malware Prevention</code>.
+        Enable IDS on your transport node clusters — you can scope this to specific clusters
+        first if you want a staged rollout. Start in <strong>Detect</strong> mode, not
+        Prevent. Let the signature engine run for a week and review what it flags before
+        moving to inline prevention.
       </p>
 
-      <ul>
-        <li>
-          <strong>Policy Objects over Manager Objects.</strong> NSX 4.x uses the Policy
-          API exclusively. If you have legacy Manager-mode objects from an in-place NSX
-          upgrade, resolve those before building new segmentation policy.
-        </li>
-        <li>
-          <strong>Project-based networking.</strong> VCF 5.x introduces Projects as a
-          multi-tenancy construct. Security policy scoped to a Project is isolated from
-          the global policy space. Design your segmentation zones with this boundary in
-          mind from the start.
-        </li>
-        <li>
-          <strong>vDefend ATP licensing.</strong> ATP is not included in the base VCF
-          license. It requires either the VCF+ add-on or a standalone vDefend ATP license.
-          Confirm entitlements before building your monitoring pipeline.
-        </li>
-      </ul>
-
-      <h2>Measuring Success</h2>
-
+      <h3>Step 5 — Create an IDS/IPS Policy</h3>
       <p>
-        The outcome of closing the Day 2 gap isn't a one-time event — it's a posture.
-        The metrics I track with customers post-implementation:
+        IDS/IPS has its own policy layer, separate from DFW. Go to
+        <code>Security → IDS/IPS &amp; Malware Prevention → Rules</code>.
+        Create a profile that targets your highest-value workload groups — databases,
+        management VMs, anything internet-facing. Apply the VMware-managed signature
+        set to start; you can tune it once you've seen what the environment generates.
       </p>
 
-      <ul>
-        <li>Percentage of VMs covered by explicit DFW policy (target: 100%)</li>
-        <li>Time-to-detect on east-west lateral movement (target: &lt; 5 minutes with ATP)</li>
-        <li>Number of any-to-any rules remaining in production policy (target: 0)</li>
-        <li>IDS alert resolution SLA (target: Critical within 4 hours)</li>
-      </ul>
+      <h3>Step 6 — Enable NTA</h3>
+      <p>
+        NTA is enabled separately under <code>Security → Network Detection &amp; Response</code>.
+        Once on, it begins collecting east-west flow telemetry and building a behavioural
+        baseline. Give it 7–14 days before expecting meaningful anomaly detection — it
+        needs time to understand what "normal" looks like in your environment.
+      </p>
+
+      <div class="callout">
+        <span class="callout-label">// WHAT CHANGES AFTER THIS</span>
+        <p>
+          Once NTA has a baseline, the Security Overview dashboard starts showing something
+          genuinely useful: which VMs are behaving anomalously, which flows deviate from
+          the baseline, and which events correlate across the kill chain. This is the
+          capability gap between "we have a firewall" and "we have visibility."
+        </p>
+      </div>
+
+      <h2>The Conversation to Have With Customers</h2>
 
       <p>
-        The Day 2 gap is solvable. It requires intent, a sequenced approach, and the
-        right tooling. vDefend ATP doesn't replace the operational discipline — but it
-        makes the monitoring phase fast enough that teams actually finish the journey
-        rather than abandoning it after step one.
+        Most customers don't know what they're missing because they've never seen the
+        SSP dashboards working. The most effective thing you can do in a TAM or customer
+        engagement is show them a live Security Overview with IDS alerts and NTA flows
+        populating. That one screen does more to justify the investment in ATP than any
+        slide deck.
+      </p>
+
+      <p>
+        The DFW work they did? That's not wasted — it's the foundation. SSP and ATP are
+        the detection and response layer that sits on top of it. The story isn't "you
+        did security wrong." It's "you built the wall, now let's install the cameras."
       </p>
 
     </article>
