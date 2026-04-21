@@ -1,0 +1,64 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="about — the segmented nerd" description="About the site and its author.">
+  <article class="container">
+    <header class="page-header">
+      <h1>about</h1>
+    </header>
+
+    <p>
+      The segmented nerd is a blog about lateral security — the increasingly
+      important practice of controlling and detecting what moves
+      <em>inside</em> the perimeter. Micro-segmentation, distributed
+      firewalling, east-west NDR, identity-aware policy, and the platforms
+      shaping how we defend internal networks.
+    </p>
+
+    <p>
+      Posts land every two weeks. The cadence is intentional: fast enough to
+      track a fast-moving product and threat landscape, slow enough that each
+      post is actually worth your time. Each one aims to tie recent news
+      (product updates, notable incidents, real threat activity) to something
+      useful you could actually do this sprint.
+    </p>
+
+    <h2>Who this is for</h2>
+    <p>
+      Security and network engineers — the people configuring distributed
+      firewalls, writing segmentation policy, and triaging NDR alerts. If you
+      spend your day thinking about traffic that never touches the internet,
+      you're the reader.
+    </p>
+
+    <h2>Who writes this</h2>
+    <p>
+      Written by <strong>Josh Green</strong>. Views are my own. I try hard to
+      be accurate about products and capabilities; when I'm uncertain about
+      something, I'll say so in the post.
+    </p>
+
+    <h2>Contact &amp; elsewhere</h2>
+    <p>
+      Source lives on
+      <a href="https://github.com/dredex/the-segmented-nerd" target="_blank" rel="noopener">GitHub</a>.
+      Corrections and typo PRs welcome.
+    </p>
+  </article>
+
+  <style>
+    .page-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .page-header h1 {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    h2 { font-size: 1.15rem; }
+  </style>
+</BaseLayout>

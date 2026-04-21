@@ -1,0 +1,210 @@
+/* ============================================================
+   The Segmented Nerd — design tokens + base styles
+   Warm neutral palette, technical-blog feel, light + dark.
+   ============================================================ */
+
+:root {
+  /* Light mode — warm off-white paper, soft charcoal ink.
+     Intentionally avoiding pure #fff / #000 to reduce eye strain. */
+  --bg:          #faf9f6;
+  --bg-elev:     #f3f1ea;
+  --bg-code:     #efede6;
+  --text:        #2a2a28;
+  --text-muted:  #6b6b66;
+  --text-subtle: #8a8a84;
+  --border:      #e5e3dc;
+  --border-soft: #eeece4;
+  --accent:      #5b7a6a;    /* muted sage — technical, calm */
+  --accent-hover:#3f5a4d;
+  --selection:   rgba(91, 122, 106, 0.18);
+
+  /* Typography scale */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-size-base: 17px;
+  --line-height:    1.7;
+
+  /* Layout */
+  --content-width: 680px;
+  --wide-width:    960px;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* Dark mode — soft warm charcoal, not oled-black.
+     Keeps contrast readable at night without blasting the eyes. */
+  --bg:          #1a1918;
+  --bg-elev:     #232220;
+  --bg-code:     #242322;
+  --text:        #e5e3dc;
+  --text-muted:  #9a9a94;
+  --text-subtle: #7a7a74;
+  --border:      #2d2c2a;
+  --border-soft: #242322;
+  --accent:      #8baa97;
+  --accent-hover:#a6c2b0;
+  --selection:   rgba(139, 170, 151, 0.2);
+
+  color-scheme: dark;
+}
+
+/* If the user hasn't made an explicit choice, honor system preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg:          #1a1918;
+    --bg-elev:     #232220;
+    --bg-code:     #242322;
+    --text:        #e5e3dc;
+    --text-muted:  #9a9a94;
+    --text-subtle: #7a7a74;
+    --border:      #2d2c2a;
+    --border-soft: #242322;
+    --accent:      #8baa97;
+    --accent-hover:#a6c2b0;
+    --selection:   rgba(139, 170, 151, 0.2);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html, body { height: 100%; }
+img, svg, video { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+
+/* ---------- Base ---------- */
+html {
+  font-family: var(--font-sans);
+  font-size:   var(--font-size-base);
+  line-height: var(--line-height);
+  background:  var(--bg);
+  color:       var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ---------- Containers ---------- */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+}
+
+.container-wide {
+  width: 100%;
+  max-width: var(--wide-width);
+  margin-inline: auto;
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+h1 { font-size: clamp(1.9rem, 4vw + 0.5rem, 2.5rem); margin-block: 0.25em 0.6em; }
+h2 { font-size: 1.45rem; margin-block: 2.2em 0.6em; }
+h3 { font-size: 1.15rem; margin-block: 1.8em 0.5em; }
+
+p, ul, ol, blockquote {
+  margin-block: 0.9em;
+}
+
+p { color: var(--text); }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+a:hover {
+  color: var(--accent-hover);
+  border-bottom-color: currentColor;
+}
+
+strong { font-weight: 600; color: var(--text); }
+em { font-style: italic; }
+
+blockquote {
+  padding: 0.2em 0 0.2em 1.1em;
+  border-left: 2px solid var(--border);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+ul, ol {
+  padding-left: 1.4em;
+}
+li { margin-block: 0.35em; }
+li::marker { color: var(--text-subtle); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
+}
+
+/* ---------- Code ---------- */
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+:not(pre) > code {
+  background: var(--bg-code);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0.12em 0.38em;
+  font-size: 0.88em;
+}
+
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  line-height: 1.55;
+  margin-block: 1.4em;
+}
+pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* ---------- Utility ---------- */
+.mono { font-family: var(--font-mono); }
+.muted { color: var(--text-muted); }
+.subtle { color: var(--text-subtle); }
+.small { font-size: 0.86rem; }
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}

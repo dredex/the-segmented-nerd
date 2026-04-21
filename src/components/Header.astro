@@ -1,0 +1,72 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header>
+  <div class="container-wide header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">//</span> the segmented nerd
+    </a>
+    <nav>
+      <a href="/" class:list={[{ active: isActive("/") }]}>Home</a>
+      <a href="/blog" class:list={[{ active: isActive("/blog") }]}>Blog</a>
+      <a href="/about" class:list={[{ active: isActive("/about") }]}>About</a>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 0;
+    letter-spacing: -0.01em;
+  }
+  .brand:hover { color: var(--accent); }
+  .brand-mark {
+    color: var(--accent);
+    margin-right: 0.35em;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  nav a {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 0;
+    transition: color 0.15s ease;
+  }
+  nav a:hover, nav a.active {
+    color: var(--text);
+  }
+  nav a.active {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1.5px;
+  }
+  @media (max-width: 520px) {
+    .header-inner { gap: 1rem; }
+    nav { gap: 1rem; }
+  }
+</style>

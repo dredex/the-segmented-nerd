@@ -1,0 +1,110 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"blog">;
+}
+
+const { entry } = Astro.props;
+const { title, description, pubDate, author, tags } = entry.data;
+
+const formattedDate = pubDate.toLocaleDateString("en-US", {
+  year:  "numeric",
+  month: "long",
+  day:   "numeric",
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="container">
+    <header class="post-header">
+      <div class="post-meta mono small">
+        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        <span class="dot">·</span>
+        <span>{author}</span>
+      </div>
+      <h1>{title}</h1>
+      <p class="deck">{description}</p>
+      {tags?.length > 0 && (
+        <ul class="tags">
+          {tags.map((tag) => (
+            <li class="mono small">#{tag}</li>
+          ))}
+        </ul>
+      )}
+    </header>
+
+    <div class="post-body">
+      <slot />
+    </div>
+
+    <footer class="post-footer">
+      <a href="/blog" class="mono small">← back to all posts</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .post-meta {
+    color: var(--text-muted);
+    margin-bottom: 0.9rem;
+  }
+  .dot {
+    margin: 0 0.5em;
+    color: var(--text-subtle);
+  }
+  .post-header h1 {
+    margin-block: 0 0.45em;
+  }
+  .deck {
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    margin: 0;
+    font-style: italic;
+  }
+  .tags {
+    list-style: none;
+    padding: 0;
+    margin: 1.1rem 0 0;
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+  }
+  .tags li {
+    color: var(--text-muted);
+  }
+
+  .post-body {
+    /* Typographic defaults already in global.css; this just ensures
+       the H1 from the frontmatter doesn't duplicate if the markdown
+       also leads with a # Title line (it does by convention in our posts). */
+  }
+  .post-body :global(h1):first-child {
+    display: none;
+  }
+  /* The italic deck line directly after the title in markdown is also
+     shown in the header above — hide it in the body to avoid duplication. */
+  .post-body :global(p:first-child em:only-child),
+  .post-body :global(p:first-child > em:first-child:last-child) {
+    /* Noop — handled by author convention; keep as a hook for future tweaks. */
+  }
+
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .post-footer a {
+    color: var(--text-muted);
+    border-bottom: 0;
+  }
+  .post-footer a:hover {
+    color: var(--accent);
+  }
+</style>
