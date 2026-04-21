@@ -107,4 +107,32 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
   .post-footer a:hover {
     color: var(--accent);
   }
+
+  /* Figures / images break out slightly wider than the reading column
+     and get a soft border + caption styling. */
+  .post-body :global(figure) {
+    margin: 2.4rem -1.5rem;
+    padding: 0;
+  }
+  .post-body :global(figure img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border-soft);
+    background: var(--bg-elev);
+  }
+  .post-body :global(figcaption) {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.7rem;
+    line-height: 1.5;
+  }
+  @media (max-width: 720px) {
+    .post-body :global(figure) {
+      margin-inline: 0;
+    }
+  }
 </style>
