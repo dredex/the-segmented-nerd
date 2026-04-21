@@ -1,0 +1,612 @@
+---
+const title = "AVI in VCF: The Load Balancing Tier You Already Own";
+const date = "2026-04-21";
+const readTime = "7 min";
+const tags = ["AVI", "VCF", "App Delivery"];
+---
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} // The Segmented Nerd</title>
+  <meta name="description" content="Your VCF license includes AVI. Most customers are still running a hardware appliance next to it. Here's what AVI actually does and how to start using it." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #007aff;
+      --bg: #080808;
+      --surface: #0f0f0f;
+      --surface-2: #111;
+      --border: rgba(255,255,255,0.06);
+      --text: rgba(255,255,255,0.55);
+      --text-bright: rgba(255,255,255,0.92);
+      --text-dim: rgba(255,255,255,0.22);
+      --text-mid: rgba(255,255,255,0.38);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 44px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-home {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+    .nav-home:hover { color: var(--blue); }
+
+    .nav-sep {
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(255,255,255,0.1);
+      margin: 0 12px;
+      font-size: 0.6rem;
+    }
+
+    .nav-current {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 360px;
+    }
+
+    /* ── ARTICLE LAYOUT ── */
+    .article-wrap {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 64px 44px 120px;
+    }
+
+    /* ── HEADER ── */
+    .article-header {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .article-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.52rem;
+      color: rgba(0,122,255,0.6);
+      border: 1px solid rgba(0,122,255,0.2);
+      padding: 3px 9px;
+      letter-spacing: 1px;
+    }
+
+    .article-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+      font-weight: 600;
+      color: var(--text-bright);
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .meta-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    .meta-sep {
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(255,255,255,0.08);
+      font-size: 0.6rem;
+    }
+
+    /* ── PROSE ── */
+    .prose { font-size: 1rem; line-height: 1.85; font-weight: 300; color: var(--text); }
+
+    .prose p { margin-bottom: 1.6rem; }
+
+    .prose h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin: 3rem 0 1.2rem;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0,122,255,0.12);
+    }
+
+    .prose h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin: 2.4rem 0 0.8rem;
+      letter-spacing: -0.2px;
+    }
+
+    .prose strong {
+      font-weight: 500;
+      color: var(--text-bright);
+    }
+
+    .prose em {
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: rgba(0,122,255,0.04);
+      border: 1px solid rgba(0,122,255,0.15);
+      border-left: 3px solid var(--blue);
+      padding: 22px 26px;
+      margin: 2rem 0;
+      border-radius: 0;
+    }
+
+    .callout-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 3px;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ── DIAGRAM ── */
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      margin: 2rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 2;
+      color: var(--text-dim);
+      overflow-x: auto;
+    }
+
+    .diagram .node {
+      color: var(--text-bright);
+    }
+
+    .diagram .arrow {
+      color: var(--blue);
+    }
+
+    .diagram .label {
+      color: rgba(0,122,255,0.5);
+    }
+
+    /* ── STEP LIST ── */
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.4rem 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .step-list li {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--blue);
+      border: 1px solid rgba(0,122,255,0.25);
+      padding: 3px 7px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .step-content strong {
+      color: var(--text-bright);
+      font-weight: 500;
+    }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8em;
+      color: rgba(0,122,255,0.8);
+      background: rgba(0,122,255,0.06);
+      border: 1px solid rgba(0,122,255,0.12);
+      padding: 1px 5px;
+    }
+
+    /* ── FEATURE TABLE ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin: 1.6rem 0 2rem;
+    }
+
+    .feature-cell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+    }
+
+    .feature-cell-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 2px;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .feature-cell p {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text);
+      margin: 0;
+    }
+
+    /* ── CLOSING CALLOUT ── */
+    .closing-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--blue);
+      padding: 32px 36px;
+      margin-top: 3rem;
+    }
+
+    .closing-callout p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+    }
+
+    .closing-callout p + p { margin-top: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 44px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .article-wrap { padding: 40px 20px 80px; }
+      footer { padding: 20px; flex-direction: column; gap: 8px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-home">// ROOT</a>
+    <span class="nav-sep">/</span>
+    <a href="/professional" class="nav-home">PROFESSIONAL</a>
+    <span class="nav-sep">/</span>
+    <a href="/blog" class="nav-home">FIELD NOTES</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">AVI IN VCF</span>
+  </nav>
+
+  <div class="article-wrap">
+
+    <header class="article-header">
+      <div class="article-tags">
+        {tags.map(tag => <span class="tag">#{tag}</span>)}
+      </div>
+      <h1 class="article-title">{title}</h1>
+      <div class="article-meta">
+        <span class="meta-item">{date}</span>
+        <span class="meta-sep">//</span>
+        <span class="meta-item">{readTime} read</span>
+      </div>
+    </header>
+
+    <div class="prose">
+
+      <p>
+        There's a conversation I have regularly with customers who are deep into VCF. They've got
+        DFW running, they've got NSX segments laid out, maybe they're starting to look at vDefend SSP.
+        And then I ask about their load balancer.
+      </p>
+
+      <p>
+        Nine times out of ten, the answer is something like: an F5 pair in hardware, or an HAProxy VM
+        someone stood up two years ago, or a pair of appliances that predate the VCF deployment entirely.
+        When I point out that AVI is included in their VCF license and has been sitting there since day
+        one, the response is almost always the same: <em>"We knew it was there. We just never touched it."</em>
+      </p>
+
+      <p>
+        This post is about what AVI actually is, how it fits into a VCF environment, and the practical
+        path from "it's installed somewhere" to "it's routing production traffic."
+      </p>
+
+      <h2>// What AVI Actually Is</h2>
+
+      <p>
+        AVI is a software-defined application delivery controller — an ADC. Not a load balancer
+        bolted onto an existing product. It was purpose-built by Avi Networks before VMware acquired
+        them, and the architecture reflects that: the control plane is separated from the data plane,
+        the data plane scales elastically, and everything is managed through a modern API.
+      </p>
+
+      <p>
+        The three things you need to understand to work with AVI are the <strong>Controller</strong>,
+        the <strong>Service Engines</strong>, and the <strong>Virtual Services</strong>.
+      </p>
+
+      <div class="diagram">
+        <div><span class="label">// AVI ARCHITECTURE</span></div>
+        <div>&nbsp;</div>
+        <div><span class="node">[ AVI Controller ]</span>  <span class="label">← management plane, API, analytics</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">↓</span></div>
+        <div><span class="node">[ Service Engine 1 ]</span>&nbsp;&nbsp;<span class="node">[ Service Engine 2 ]</span>  <span class="label">← data plane VMs, auto-deployed</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">↓</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="arrow">↓</span></div>
+        <div><span class="node">[ Pool: App Server 1 ]</span>&nbsp;&nbsp;<span class="node">[ Pool: App Server 2 ]</span>  <span class="label">← your backends</span></div>
+      </div>
+
+      <p>
+        The <strong>Controller</strong> is a three-node cluster (or single node in lab) that handles
+        all configuration, analytics, and orchestration. It talks to vCenter and NSX — it knows your
+        inventory, it can place Service Engines automatically, and it feeds telemetry into a built-in
+        analytics engine that most customers don't realize is there.
+      </p>
+
+      <p>
+        The <strong>Service Engines (SEs)</strong> are VMs that the Controller deploys automatically
+        when you create a Virtual Service. They live on your ESXi hosts, they scale out when load
+        increases, and they scale back when it drops. You don't provision them manually. The Controller
+        handles placement based on HA settings and host capacity. This is the piece that surprises most
+        people coming from hardware LBs — you stop thinking about individual appliances and start
+        thinking about capacity pools.
+      </p>
+
+      <p>
+        A <strong>Virtual Service</strong> is the entity that represents your application endpoint.
+        It has a VIP, a port, a protocol, an application profile, and a pool. The pool is your list
+        of backend servers with health monitors. That's the core unit you'll create and manage.
+      </p>
+
+      <h2>// What It Does That Hardware Doesn't</h2>
+
+      <div class="feature-grid">
+        <div class="feature-cell">
+          <div class="feature-cell-label">Real-Time Analytics</div>
+          <p>Per-connection, per-client, per-pool member metrics. End-to-end visibility from VIP to backend without a separate monitoring tool.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-cell-label">Elastic Scale</div>
+          <p>Service Engines scale out under load automatically. You set the SE group parameters once. No manual capacity planning for traffic spikes.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-cell-label">Built-In WAF</div>
+          <p>OWASP CRS-based WAF included. Not a bolt-on. Configured per Virtual Service with learning mode so you don't break apps on day one.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-cell-label">SSL/TLS Offload</div>
+          <p>Full SSL termination and re-encryption. Certificate management through the Controller. SNI support. HSM integration available.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-cell-label">NSX Integration</div>
+          <p>AVI pools can use NSX security groups as members. Your server inventory is dynamic — add a server to the right group, AVI picks it up.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-cell-label">API-First</div>
+          <p>Everything in the UI is an API call. Full Terraform provider. GitOps-friendly configuration. Infrastructure-as-code for app delivery.</p>
+        </div>
+      </div>
+
+      <h2>// The Gap TAMs See in the Field</h2>
+
+      <p>
+        The pattern isn't that customers haven't deployed AVI — it's that they deployed the
+        Controller, stood up a few Virtual Services for an internal app or two, and stopped
+        there. The hardware appliances stayed in place for anything production-critical because
+        "that's what we trust."
+      </p>
+
+      <p>
+        The result: AVI is doing a fraction of what it's capable of, and the hardware LBs are
+        handling production workloads that AVI could handle better — with more visibility and
+        less operational overhead. The TAM conversation usually ends with: <em>"You're paying
+        maintenance on those appliances. You already own AVI. What's the migration plan?"</em>
+      </p>
+
+      <div class="callout">
+        <div class="callout-label">// Field Note</div>
+        <p>
+          The most common blocker isn't technical — it's trust. Engineers who've run hardware
+          LBs for a decade are skeptical of a software ADC managing production traffic. The
+          right approach is to start with net-new applications rather than trying to migrate
+          existing ones. Let AVI prove itself on a greenfield workload, build familiarity, then
+          look at migration.
+        </p>
+      </div>
+
+      <h2>// Getting Started: The Actual Path</h2>
+
+      <p>
+        Assuming AVI is already deployed in your VCF environment (check under the Workload
+        Management section in vCenter, or in the VCF SDDC Manager), here's the path from
+        "installed" to "routing traffic":
+      </p>
+
+      <ol class="step-list">
+        <li>
+          <span class="step-num">01</span>
+          <div class="step-content">
+            <strong>Connect AVI to vCenter and NSX.</strong> In the AVI Controller UI
+            (<code>https://&lt;controller-ip&gt;</code>), go to Infrastructure → Clouds.
+            Your VCF deployment should already have a cloud configured. Verify the vCenter
+            and NSX-T credentials are active and the status shows green. If not, re-enter
+            credentials — these often expire after password rotations.
+          </div>
+        </li>
+        <li>
+          <span class="step-num">02</span>
+          <div class="step-content">
+            <strong>Configure a Service Engine Group.</strong> This defines where your SEs
+            will be placed, the HA model, and the max SE count. For production, use N+1
+            HA with a minimum of two SEs. For testing, a single SE is fine. Go to
+            Infrastructure → Service Engine Groups → Default-Group and verify it points
+            at the right vSphere cluster.
+          </div>
+        </li>
+        <li>
+          <span class="step-num">03</span>
+          <div class="step-content">
+            <strong>Create a Pool.</strong> Applications → Pools → Create. Add your backend
+            server IPs and port, select a health monitor (HTTP or HTTPS for web apps, TCP
+            for everything else). AVI will start health-checking immediately after save.
+          </div>
+        </li>
+        <li>
+          <span class="step-num">04</span>
+          <div class="step-content">
+            <strong>Create a Virtual Service.</strong> Applications → Virtual Services →
+            Basic Setup. Assign your VIP address, select the pool you just created, choose
+            an application profile (HTTP, HTTPS, L4), and save. AVI will deploy Service
+            Engines automatically if none exist in the SE Group. First-time SE deployment
+            takes 2–4 minutes.
+          </div>
+        </li>
+        <li>
+          <span class="step-num">05</span>
+          <div class="step-content">
+            <strong>Verify in the Analytics tab.</strong> Once the Virtual Service is up,
+            click into it and go to Analytics. You'll see real-time connection counts,
+            latency to pool members, and end-to-end response times. This alone is worth
+            the migration from a hardware box — the visibility is dramatically better.
+          </div>
+        </li>
+      </ol>
+
+      <h2>// Sizing Reality Check</h2>
+
+      <p>
+        Service Engines are VMs. By default they're sized at 2 vCPU / 2 GB RAM. In most
+        environments that's fine for internal workloads, but if you're moving high-throughput
+        production traffic — large SSL offload, heavy L7 inspection — you'll want to adjust
+        the SE flavor in the SE Group settings before you create Virtual Services. Changing
+        the SE size after the fact requires deleting and recreating the SE VMs.
+      </p>
+
+      <p>
+        Also: AVI Controller resources. The Controller cluster runs on VMs too — default
+        sizing is 8 vCPU / 24 GB RAM per node. Don't deploy it on a cluster that's already
+        memory-constrained. In several field deployments I've seen the Controller degraded
+        not from load, but from vSphere memory pressure causing balloon activity on Controller
+        VMs. Reserve memory at the VM level if you're tight on resources.
+      </p>
+
+      <h2>// Where This Fits in the VCF Stack</h2>
+
+      <p>
+        Think of your VCF security posture in layers. DFW handles east-west access control —
+        who can talk to what. vDefend SSP and ATP handle threat detection and inline prevention
+        — identifying and blocking malicious traffic at the hypervisor level. AVI sits at the
+        application tier: it's the intelligent front door for your workloads, handling traffic
+        distribution, SSL, and application-layer protection through WAF.
+      </p>
+
+      <p>
+        These aren't competing tools. They're complementary. A properly layered VCF environment
+        uses all three: NSX DFW for segmentation, vDefend for threat prevention, and AVI for
+        application delivery. Most customers I work with have the first one running well, are
+        in progress on the second, and haven't touched the third.
+      </p>
+
+    </div>
+
+    <div class="closing-callout">
+      <p>
+        If you're a TAM or SE reading this: the AVI conversation is usually easiest to open
+        when a customer mentions a hardware LB renewal. That's the moment to ask what's in
+        their VCF license and whether they've looked at AVI for net-new workloads. The renewal
+        math plus the functionality gap usually gets the conversation started.
+      </p>
+      <p>
+        If you're an engineer reading this: start with one non-critical application and spend
+        an hour in the Analytics tab. Once you see what per-connection visibility looks like
+        on a modern software ADC, it's hard to go back to a hardware box with SNMP polling.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="footer-label">// THE SEGMENTED NERD</span>
+    <span class="footer-label">thesegmentednerd.com</span>
+  </footer>
+
+</body>
+</html>
