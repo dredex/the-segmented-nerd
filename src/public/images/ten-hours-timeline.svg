@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-label="Three time bars contrasting the 10-hour exploitation window for the marimo CVE against a typical 5–7 day change-management cycle, with virtual patch deployment shown as a sliver of minutes.">
+  <style>
+    .bg     { fill: #faf9f6; }
+    .text   { fill: #2a2a28; }
+    .muted  { fill: #6e6c66; }
+    .danger { fill: #b84a3e; }
+    .neutral{ fill: #8b867d; }
+    .accent { fill: #5b7a6a; }
+    .axis   { stroke: #d6d2c8; }
+
+    .label  { font: 500 12px/1 ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+    .stat   { font: 600 22px ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: -0.01em; }
+    .caption{ font: 400 13px Inter, ui-sans-serif, system-ui, sans-serif; }
+
+    @media (prefers-color-scheme: dark) {
+      .bg     { fill: #1a1918; }
+      .text   { fill: #e5e3dc; }
+      .muted  { fill: #9b988f; }
+      .danger { fill: #d96a5d; }
+      .neutral{ fill: #7a766d; }
+      .accent { fill: #8baa97; }
+      .axis   { stroke: #2f2d2a; }
+    }
+  </style>
+
+  <!-- Background -->
+  <rect class="bg" width="900" height="420" rx="6" />
+
+  <!-- Title -->
+  <text class="label muted" x="60" y="48">the collapsing exploitation window</text>
+
+  <!-- Row 1: exploitation -->
+  <text class="label text" x="60" y="98">exploit observed in the wild</text>
+  <rect class="danger" x="60" y="112" width="160" height="34" rx="2" />
+  <text class="stat text" x="232" y="137">10 hrs</text>
+  <text class="caption muted" x="60" y="172">marimo CVE-2026-39987 — disclosure to active exploitation</text>
+
+  <!-- Divider -->
+  <line class="axis" x1="60" y1="200" x2="840" y2="200" stroke-width="1" />
+
+  <!-- Row 2: change cycle -->
+  <text class="label text" x="60" y="232">traditional change-management cycle</text>
+  <rect class="neutral" x="60" y="246" width="720" height="34" rx="2" />
+  <text class="stat text" x="792" y="271">~5–7 days</text>
+  <text class="caption muted" x="60" y="306">staging → regression → maintenance window → production</text>
+
+  <!-- Divider -->
+  <line class="axis" x1="60" y1="334" x2="840" y2="334" stroke-width="1" />
+
+  <!-- Row 3: virtual patch -->
+  <text class="label text" x="60" y="366">virtual patch (signature push)</text>
+  <rect class="accent" x="60" y="380" width="22" height="22" rx="2" />
+  <text class="stat text" x="94" y="398">minutes</text>
+  <text class="caption muted" x="240" y="397">the bridge between the two timelines</text>
+</svg>
