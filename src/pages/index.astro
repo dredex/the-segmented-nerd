@@ -6,283 +6,252 @@ const siteTitle = "THE SEGMENTED NERD";
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{siteTitle}</title>
-  <meta name="description" content="Technical field notes on VCF, vDefend, micro-segmentation, and whatever else is consuming the home lab." />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Field notes on VCF, vDefend, and enterprise security architecture." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --blue: #007aff;
-      --green: #00ff41;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
-      background: #0a0a0a;
-      font-family: 'JetBrains Mono', monospace;
+      background: #080808;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Scanline overlay */
-    body::after {
-      content: '';
+    /* ── BACKGROUND ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2400');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.18;
+      transform: scale(1.05);
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1.12); }
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 60%, rgba(0,122,255,0.07) 0%, transparent 60%),
+        linear-gradient(to bottom, #080808 0%, transparent 30%, transparent 70%, #080808 100%);
+    }
+
+    .scanlines {
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
         to bottom,
-        transparent 0px,
-        transparent 3px,
-        rgba(0,0,0,0.06) 3px,
-        rgba(0,0,0,0.06) 4px
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px
       );
       pointer-events: none;
-      z-index: 200;
-    }
-
-    /* ── SITE HEADER ── */
-    .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 22px 40px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
-      pointer-events: none;
-    }
-
-    .site-name {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 6px;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
-    }
-
-    /* ── SPLIT ── */
-    .split-container {
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-    }
-
-    .side {
-      flex: 1;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-decoration: none;
-      overflow: hidden;
-      transition: flex 0.65s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* ── BACKGROUND IMAGES ── */
-    .side-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.5s ease;
-      opacity: 0.35;
-    }
-
-    .pro .side-bg {
-      /* Network/server room — good contrast, clearly "tech" */
-      background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000');
-    }
-
-    .personal .side-bg {
-      background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2000');
-    }
-
-    .side:hover .side-bg {
-      opacity: 0.55;
-      transform: scale(1.04);
-    }
-
-    /* Colour tint overlay per side */
-    .side-tint {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .pro .side-tint {
-      background: radial-gradient(ellipse at center, rgba(0,122,255,0.15) 0%, transparent 70%);
-    }
-
-    .personal .side-tint {
-      background: radial-gradient(ellipse at center, rgba(0,255,65,0.1) 0%, transparent 70%);
-    }
-
-    .side:hover .side-tint { opacity: 1; }
-
-    /* Bottom gradient for text legibility */
-    .side-gradient {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(0,0,0,0.75) 0%,
-        rgba(0,0,0,0.3) 40%,
-        rgba(0,0,0,0.1) 100%
-      );
-    }
-
-    /* Inner border that appears on hover */
-    .side-border {
-      position: absolute;
-      inset: 16px;
-      border: 1px solid transparent;
-      transition: border-color 0.4s ease;
-      pointer-events: none;
-    }
-
-    .pro:hover  .side-border { border-color: rgba(0,122,255,0.35); }
-    .personal:hover .side-border { border-color: rgba(0,255,65,0.25); }
-
-    /* Vertical divider */
-    .divider {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1px;
-      height: 100vh;
-      background: linear-gradient(to bottom,
-        transparent 0%,
-        rgba(255,255,255,0.08) 20%,
-        rgba(255,255,255,0.08) 80%,
-        transparent 100%
-      );
-      pointer-events: none;
-      z-index: 50;
-    }
-
-    /* ── CONTENT ── */
-    .content {
-      position: relative;
       z-index: 10;
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 30;
+      padding: 28px 44px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      padding: 0 40px;
-      text-align: center;
     }
 
-    .segment-label {
-      font-size: 0.55rem;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-    }
-
-    .side-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 5px;
-      margin: 0;
-      color: rgba(255,255,255,0.85);
-      transition: color 0.3s ease, letter-spacing 0.3s ease;
-      text-shadow: 0 0 40px rgba(0,0,0,0.8);
-    }
-
-    .pro:hover  .side-title { color: var(--blue); letter-spacing: 6px; }
-    .personal:hover .side-title { color: var(--green); letter-spacing: 6px; }
-
-    .side-sub {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.45);
-      margin: 0;
-      letter-spacing: 1.5px;
-      transition: color 0.3s ease;
-    }
-
-    .pro:hover .side-sub     { color: rgba(0,122,255,0.8); }
-    .personal:hover .side-sub { color: rgba(0,255,65,0.7); }
-
-    .enter-btn {
-      margin-top: 8px;
+    .top-label {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       letter-spacing: 3px;
-      color: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 7px 18px;
-      transition: color 0.3s ease,
-                  border-color 0.3s ease,
-                  background 0.3s ease;
+      color: rgba(255,255,255,0.18);
     }
 
-    .pro:hover  .enter-btn {
-      color: var(--blue);
-      border-color: rgba(0,122,255,0.4);
-      background: rgba(0,122,255,0.08);
+    .top-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 2px;
+      color: rgba(0,122,255,0.55);
+      border: 1px solid rgba(0,122,255,0.2);
+      padding: 5px 12px;
     }
 
-    .personal:hover .enter-btn {
-      color: var(--green);
-      border-color: rgba(0,255,65,0.3);
-      background: rgba(0,255,65,0.06);
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 20;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
     }
 
-    /* Hover expand */
-    .side:hover { flex: 1.5; }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 5px;
+      color: rgba(0,122,255,0.75);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
 
-    @media (max-width: 650px) {
-      .split-container { flex-direction: column; }
-      .side { flex: 1 !important; height: 50vh; }
-      .side-title { font-size: 1.1rem; letter-spacing: 3px; }
-      .site-name { font-size: 0.55rem; }
+    .hero-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+      text-shadow: 0 0 80px rgba(0,122,255,0.15);
+    }
+
+    .hero-title .accent { color: #007aff; }
+
+    .hero-rule {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(0,122,255,0.6), transparent);
+      margin: 0 auto 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.55s forwards;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.3px;
+      line-height: 1.7;
+      max-width: 460px;
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.65s forwards;
+    }
+
+    /* ── CTA BUTTON ── */
+    .enter-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      padding: 17px 40px;
+      border: 1px solid rgba(0,122,255,0.35);
+      background: rgba(0,122,255,0.06);
+      color: rgba(255,255,255,0.9);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.85s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enter-link::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,122,255,0.12), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .enter-link:hover {
+      border-color: rgba(0,122,255,0.7);
+      background: rgba(0,122,255,0.1);
+      transform: translateY(-3px);
+      box-shadow:
+        0 12px 40px rgba(0,122,255,0.18),
+        0 0 0 1px rgba(0,122,255,0.15);
+    }
+
+    .enter-link:hover::after { opacity: 1; }
+
+    .arrow {
+      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .enter-link:hover .arrow { transform: translateX(5px); }
+
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 30;
+      padding: 28px 44px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .bottom-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.08);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .hero-title { font-size: 1.9rem; letter-spacing: 4px; }
+      .top-bar, .bottom-bar { padding: 20px 24px; }
+      .hero { padding: 24px; }
+      .hero-sub { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <span class="site-name">The Segmented Nerd</span>
-  </header>
+  <div class="bg"></div>
+  <div class="bg-overlay"></div>
+  <div class="scanlines"></div>
 
-  <div class="divider"></div>
-
-  <div class="split-container">
-
-    <a href="/professional" class="side pro">
-      <div class="side-bg"></div>
-      <div class="side-tint"></div>
-      <div class="side-gradient"></div>
-      <div class="side-border"></div>
-      <div class="content">
-        <span class="segment-label">SEGMENT_01</span>
-        <h2 class="side-title">[ PROFESSIONAL ]</h2>
-        <p class="side-sub">VCF // vDefend // Cloud Architecture</p>
-        <span class="enter-btn">ENTER →</span>
-      </div>
-    </a>
-
-    <a href="/personal" class="side personal">
-      <div class="side-bg"></div>
-      <div class="side-tint"></div>
-      <div class="side-gradient"></div>
-      <div class="side-border"></div>
-      <div class="content">
-        <span class="segment-label">SEGMENT_02</span>
-        <h2 class="side-title">[ PERSONAL ]</h2>
-        <p class="side-sub">3D Printing // Woodworking // Fleet</p>
-        <span class="enter-btn">ENTER →</span>
-      </div>
-    </a>
-
+  <div class="top-bar">
+    <span class="top-label">// THESEGMENTEDNERD.COM</span>
+    <span class="top-status">TAM // VCF // VDEFEND // AVI</span>
   </div>
+
+  <main class="hero">
+    <p class="eyebrow">Field Notes on Enterprise Security</p>
+    <h1 class="hero-title">THE <span class="accent">SEGMENTED</span> NERD</h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">
+      Practical writing on VCF, vDefend SSP, AVI, and the gap between
+      a working stack and a working security posture.
+    </p>
+    <a href="/professional" class="enter-link">
+      Enter
+      <span class="arrow">→</span>
+    </a>
+  </main>
+
+  <div class="bottom-bar">
+    <span class="bottom-label">VCF &nbsp;//&nbsp; VDEFEND &nbsp;//&nbsp; AVI &nbsp;//&nbsp; NSX &nbsp;//&nbsp; CLOUD ARCHITECTURE</span>
+  </div>
+
 </body>
 </html>
