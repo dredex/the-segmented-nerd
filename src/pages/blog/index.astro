@@ -6,113 +6,121 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const fmt = (d: Date) => d.toLocaleDateString("en-US", {
-  year: "numeric", month: "short", day: "numeric",
+  year: "numeric", month: "long", day: "numeric",
 });
 ---
 
-<BaseLayout title="blog — the segmented nerd" description="Every post on the segmented nerd.">
-  <section class="container">
-    <header class="page-header">
-      <h1>blog</h1>
-      <p class="muted">Field notes on lateral security, east-west defense, and the products that shape it. New posts on the 1st and 15th.</p>
-    </header>
+<BaseLayout title="Writing" description="Every essay on The Segmented Nerd.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">The archive</p>
+      <h1 class="page-title">Writing</h1>
+      <hr class="rule" />
+      <p class="muted page-deck">
+        Every essay. New work on the 1st and 15th.
+      </p>
+    </div>
+  </section>
+
+  <section class="container list-wrap">
+    {posts.length === 0 && (
+      <p class="muted empty">Nothing here yet. The first issue is landing soon.</p>
+    )}
 
     <ul class="post-list">
       {posts.map((post) => (
         <li>
           <a href={`/blog/${post.id}/`} class="post-row">
-            <time class="mono small" datetime={post.data.pubDate.toISOString()}>
+            <time class="eyebrow" datetime={post.data.pubDate.toISOString()}>
               {fmt(post.data.pubDate)}
             </time>
-            <div class="post-row-body">
-              <h2>{post.data.title}</h2>
-              <p class="muted">{post.data.description}</p>
-              {post.data.tags?.length > 0 && (
-                <ul class="tags">
-                  {post.data.tags.map((tag) => (
-                    <li class="mono small">#{tag}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <h2>{post.data.title}</h2>
+            <p class="muted deck">{post.data.description}</p>
+            {post.data.tags?.length > 0 && (
+              <p class="eyebrow tags">
+                {post.data.tags.map((tag, i) => (
+                  <>
+                    {i > 0 && <span class="dot"> · </span>}
+                    <span>{tag}</span>
+                  </>
+                ))}
+              </p>
+            )}
           </a>
         </li>
       ))}
-      {posts.length === 0 && (
-        <li class="empty muted">Nothing here yet. The first post is landing soon.</li>
-      )}
     </ul>
   </section>
 </BaseLayout>
 
 <style>
-  .page-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.2rem;
-    border-bottom: 1px solid var(--border-soft);
+  .page-hero {
+    padding-block: 4rem 3rem;
+    text-align: center;
   }
-  .page-header h1 {
-    font-family: var(--font-mono);
+  .page-title {
+    font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 1.8rem;
-    margin-block: 0 0.3em;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    letter-spacing: -0.01em;
+    margin: 0.8rem 0 0;
   }
-  .page-header p { margin: 0; }
+  .page-deck {
+    max-width: 480px;
+    margin-inline: auto;
+    font-size: 1rem;
+  }
+
+  .list-wrap { padding-block: 2rem 2rem; }
 
   .post-list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .post-list > li + li {
-    border-top: 1px solid var(--border-soft);
+  .post-list > li {
+    padding-block: 3rem;
+    border-bottom: 1px solid var(--border-soft);
+    text-align: center;
   }
+  .post-list > li:last-child { border-bottom: 0; }
+
   .post-row {
-    display: grid;
-    grid-template-columns: 110px 1fr;
-    gap: 1.5rem;
-    padding: 1.4rem 0;
+    display: block;
     text-decoration: none;
     color: inherit;
     border-bottom: 0;
-    transition: background-color 0.15s ease;
-    border-radius: 4px;
-  }
-  .post-row:hover {
-    background: var(--bg-elev);
-    padding-inline: 0.6rem;
-    margin-inline: -0.6rem;
   }
   .post-row time {
-    color: var(--text-muted);
-    padding-top: 0.35em;
-    white-space: nowrap;
+    display: block;
+    margin-bottom: 0.9rem;
+    font-size: 0.68rem;
   }
   .post-row h2 {
-    font-size: 1.2rem;
-    margin-block: 0 0.35em;
-    font-weight: 600;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 2.4vw + 0.5rem, 2.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.7rem;
+    color: var(--text);
+    transition: color 0.15s ease;
   }
   .post-row:hover h2 { color: var(--accent); }
-  .post-row p { margin: 0; }
-
+  .post-row .deck {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.08rem;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
   .tags {
-    list-style: none;
-    padding: 0;
-    margin-top: 0.7rem;
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
+    margin-top: 1.1rem;
+    font-size: 0.65rem;
+    color: var(--text-subtle);
   }
-  .tags li { color: var(--text-subtle); }
+  .tags .dot { color: var(--text-subtle); margin: 0 0.3em; }
 
-  .empty { padding: 2rem 0; text-align: center; }
-
-  @media (max-width: 600px) {
-    .post-row {
-      grid-template-columns: 1fr;
-      gap: 0.4rem;
-    }
-    .post-row time { padding-top: 0; }
-  }
+  .empty { text-align: center; padding-block: 3rem; }
 </style>

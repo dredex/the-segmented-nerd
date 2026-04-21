@@ -17,122 +17,164 @@ const formattedDate = pubDate.toLocaleDateString("en-US", {
 ---
 
 <BaseLayout title={title} description={description}>
-  <article class="container">
+  <article>
     <header class="post-header">
-      <div class="post-meta mono small">
-        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-        <span class="dot">·</span>
-        <span>{author}</span>
+      <div class="container">
+        <p class="eyebrow">
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+          <span class="dot">·</span>
+          <span>{author}</span>
+        </p>
+        <h1 class="title">{title}</h1>
+        <hr class="rule" />
+        <p class="deck">{description}</p>
       </div>
-      <h1>{title}</h1>
-      <p class="deck">{description}</p>
-      {tags?.length > 0 && (
-        <ul class="tags">
-          {tags.map((tag) => (
-            <li class="mono small">#{tag}</li>
-          ))}
-        </ul>
-      )}
     </header>
 
-    <div class="post-body">
+    <div class="container post-body">
       <slot />
     </div>
 
-    <footer class="post-footer">
-      <a href="/blog" class="mono small">← back to all posts</a>
+    {tags?.length > 0 && (
+      <div class="container tag-row">
+        <hr class="rule" />
+        <p class="eyebrow tags">
+          {tags.map((tag, i) => (
+            <>
+              {i > 0 && <span class="dot"> · </span>}
+              <span>{tag}</span>
+            </>
+          ))}
+        </p>
+      </div>
+    )}
+
+    <footer class="post-footer container">
+      <a href="/blog" class="eyebrow">← Back to writing</a>
     </footer>
   </article>
 </BaseLayout>
 
 <style>
   .post-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-soft);
+    padding-block: 4rem 3rem;
+    text-align: center;
   }
-  .post-meta {
-    color: var(--text-muted);
-    margin-bottom: 0.9rem;
+  .post-header .eyebrow {
+    font-size: 0.68rem;
   }
   .dot {
-    margin: 0 0.5em;
     color: var(--text-subtle);
+    margin: 0 0.5em;
   }
-  .post-header h1 {
-    margin-block: 0 0.45em;
+  .title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 5vw + 0.6rem, 3.4rem);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    margin: 1rem 0 0;
+    color: var(--text);
   }
   .deck {
-    font-size: 1.08rem;
-    color: var(--text-muted);
-    margin: 0;
+    font-family: var(--font-serif);
     font-style: italic;
-  }
-  .tags {
-    list-style: none;
-    padding: 0;
-    margin: 1.1rem 0 0;
-    display: flex;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-  }
-  .tags li {
+    font-size: 1.2rem;
     color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
   }
 
   .post-body {
-    /* Typographic defaults already in global.css; this just ensures
-       the H1 from the frontmatter doesn't duplicate if the markdown
-       also leads with a # Title line (it does by convention in our posts). */
+    padding-block: 1rem 2rem;
+    font-size: 1.05rem;
   }
+  /* Hide duplicate H1 if the markdown leads with # Title */
   .post-body :global(h1):first-child {
     display: none;
   }
-  /* The italic deck line directly after the title in markdown is also
-     shown in the header above — hide it in the body to avoid duplication. */
-  .post-body :global(p:first-child em:only-child),
-  .post-body :global(p:first-child > em:first-child:last-child) {
-    /* Noop — handled by author convention; keep as a hook for future tweaks. */
+  /* Hide duplicate italic deck paragraph if the markdown leads with *...* */
+  .post-body :global(> p:first-of-type:has(> em:only-child)) {
+    display: none;
+  }
+  /* Section headings inside the post — serif, smaller than title, airy. */
+  .post-body :global(h2) {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.6rem;
+    text-align: center;
+    margin-block: 2.8em 0.8em;
+    letter-spacing: -0.005em;
+  }
+  .post-body :global(h3) {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+    text-align: center;
+    margin-block: 2.4em 0.9em;
+  }
+  /* Drop cap on first paragraph — an editorial touch. */
+  .post-body :global(> p:first-of-type:not(:has(em:only-child))::first-letter),
+  .post-body :global(> p:nth-of-type(1)::first-letter) {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 3.4em;
+    float: left;
+    line-height: 0.85;
+    padding: 0.1em 0.12em 0 0;
+    color: var(--accent);
+  }
+
+  .tag-row {
+    padding-block: 1rem 0;
+    text-align: center;
+  }
+  .tags {
+    font-size: 0.65rem;
+    color: var(--text-subtle);
   }
 
   .post-footer {
     margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-soft);
+    padding-block: 2rem 0;
+    text-align: center;
   }
   .post-footer a {
     color: var(--text-muted);
     border-bottom: 0;
+    font-size: 0.68rem;
   }
-  .post-footer a:hover {
-    color: var(--accent);
-  }
+  .post-footer a:hover { color: var(--accent); }
 
-  /* Figures / images break out slightly wider than the reading column
-     and get a soft border + caption styling. */
+  /* Figures — soft framing, slightly pushed out from the column */
   .post-body :global(figure) {
-    margin: 2.4rem -1.5rem;
+    margin: 2.6rem -1.5rem;
     padding: 0;
   }
   .post-body :global(figure img) {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 6px;
+    border-radius: 3px;
     border: 1px solid var(--border-soft);
     background: var(--bg-elev);
   }
   .post-body :global(figcaption) {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
     text-align: center;
-    margin-top: 0.7rem;
+    margin-top: 0.8rem;
+    text-transform: uppercase;
     line-height: 1.5;
   }
   @media (max-width: 720px) {
-    .post-body :global(figure) {
-      margin-inline: 0;
-    }
+    .post-body :global(figure) { margin-inline: 0; }
+    .post-header { padding-block: 2.5rem 2rem; }
   }
 </style>

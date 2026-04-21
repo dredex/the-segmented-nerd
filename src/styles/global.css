@@ -1,68 +1,74 @@
 /* ============================================================
-   The Segmented Nerd — design tokens + base styles
-   Warm neutral palette, technical-blog feel, light + dark.
+   The Segmented Nerd — Squarespace-editorial design
+   Bedford/Hayden family feel: centered, serif display type,
+   hairline dividers, tracked-out small caps for meta.
    ============================================================ */
 
 :root {
-  /* Light mode — warm off-white paper, soft charcoal ink.
-     Intentionally avoiding pure #fff / #000 to reduce eye strain. */
-  --bg:          #faf9f6;
-  --bg-elev:     #f3f1ea;
-  --bg-code:     #efede6;
-  --text:        #2a2a28;
-  --text-muted:  #6b6b66;
-  --text-subtle: #8a8a84;
-  --border:      #e5e3dc;
-  --border-soft: #eeece4;
-  --accent:      #5b7a6a;    /* muted sage — technical, calm */
-  --accent-hover:#3f5a4d;
-  --selection:   rgba(91, 122, 106, 0.18);
+  /* Light mode — warm cream paper, near-black ink. */
+  --bg:          #faf8f3;
+  --bg-elev:     #f2efe6;
+  --bg-code:     #efebe0;
+  --bg-band:     #f4f1e7;  /* alternate section bg */
+  --text:        #1c1b18;
+  --text-muted:  #6a6760;
+  --text-subtle: #918d85;
+  --border:      #e3ded1;
+  --border-soft: #ece8dc;
+  --rule:        #1c1b18;  /* hairline rules on light */
+  --accent:      #8a6d3b;  /* warm gold — classic editorial */
+  --accent-hover:#6a5127;
+  --selection:   rgba(138, 109, 59, 0.18);
 
-  /* Typography scale */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Typography */
+  --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans:  "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
   --font-size-base: 17px;
-  --line-height:    1.7;
+  --line-height:    1.75;
 
   /* Layout */
   --content-width: 680px;
-  --wide-width:    960px;
+  --wide-width:    1100px;
 
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  /* Dark mode — soft warm charcoal, not oled-black.
-     Keeps contrast readable at night without blasting the eyes. */
-  --bg:          #1a1918;
-  --bg-elev:     #232220;
-  --bg-code:     #242322;
-  --text:        #e5e3dc;
-  --text-muted:  #9a9a94;
-  --text-subtle: #7a7a74;
-  --border:      #2d2c2a;
-  --border-soft: #242322;
-  --accent:      #8baa97;
-  --accent-hover:#a6c2b0;
-  --selection:   rgba(139, 170, 151, 0.2);
+  /* Dark mode — deep warm charcoal, cream ink. */
+  --bg:          #16140f;
+  --bg-elev:     #1e1b15;
+  --bg-code:     #201d17;
+  --bg-band:     #1b1812;
+  --text:        #ece7d9;
+  --text-muted:  #a09a8b;
+  --text-subtle: #7a7468;
+  --border:      #2b2821;
+  --border-soft: #221f19;
+  --rule:        #ece7d9;
+  --accent:      #c4a36a;
+  --accent-hover:#d9bd87;
+  --selection:   rgba(196, 163, 106, 0.22);
 
   color-scheme: dark;
 }
 
-/* If the user hasn't made an explicit choice, honor system preference. */
+/* System-preference fallback when user hasn't chosen. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --bg:          #1a1918;
-    --bg-elev:     #232220;
-    --bg-code:     #242322;
-    --text:        #e5e3dc;
-    --text-muted:  #9a9a94;
-    --text-subtle: #7a7a74;
-    --border:      #2d2c2a;
-    --border-soft: #242322;
-    --accent:      #8baa97;
-    --accent-hover:#a6c2b0;
-    --selection:   rgba(139, 170, 151, 0.2);
+    --bg:          #16140f;
+    --bg-elev:     #1e1b15;
+    --bg-code:     #201d17;
+    --bg-band:     #1b1812;
+    --text:        #ece7d9;
+    --text-muted:  #a09a8b;
+    --text-subtle: #7a7468;
+    --border:      #2b2821;
+    --border-soft: #221f19;
+    --rule:        #ece7d9;
+    --accent:      #c4a36a;
+    --accent-hover:#d9bd87;
+    --selection:   rgba(196, 163, 106, 0.22);
     color-scheme: dark;
   }
 }
@@ -85,12 +91,10 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-::selection {
-  background: var(--selection);
-}
+::selection { background: var(--selection); }
 
 body {
   min-height: 100vh;
@@ -100,7 +104,7 @@ body {
 
 main {
   flex: 1;
-  padding: 2.5rem 1.5rem 4rem;
+  padding: 0 0 5rem;
 }
 
 /* ---------- Containers ---------- */
@@ -108,51 +112,61 @@ main {
   width: 100%;
   max-width: var(--content-width);
   margin-inline: auto;
+  padding-inline: 1.5rem;
 }
 
 .container-wide {
   width: 100%;
   max-width: var(--wide-width);
   margin-inline: auto;
+  padding-inline: 1.5rem;
 }
 
 /* ---------- Typography ---------- */
 h1, h2, h3, h4 {
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
   color: var(--text);
 }
 
-h1 { font-size: clamp(1.9rem, 4vw + 0.5rem, 2.5rem); margin-block: 0.25em 0.6em; }
-h2 { font-size: 1.45rem; margin-block: 2.2em 0.6em; }
-h3 { font-size: 1.15rem; margin-block: 1.8em 0.5em; }
+h1 {
+  font-size: clamp(2.4rem, 5vw + 0.8rem, 3.6rem);
+  font-weight: 500;
+  margin-block: 0 0.4em;
+  letter-spacing: -0.015em;
+}
+h2 { font-size: clamp(1.5rem, 2vw + 0.6rem, 1.9rem); margin-block: 2em 0.55em; font-weight: 500; }
+h3 { font-size: 1.25rem; margin-block: 1.8em 0.45em; font-weight: 600; }
 
 p, ul, ol, blockquote {
-  margin-block: 0.9em;
+  margin-block: 1.1em;
 }
 
 p { color: var(--text); }
 
 a {
-  color: var(--accent);
+  color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--border);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 a:hover {
-  color: var(--accent-hover);
-  border-bottom-color: currentColor;
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
 strong { font-weight: 600; color: var(--text); }
 em { font-style: italic; }
 
 blockquote {
-  padding: 0.2em 0 0.2em 1.1em;
+  padding: 0.3em 0 0.3em 1.5em;
   border-left: 2px solid var(--border);
   color: var(--text-muted);
   font-style: italic;
+  font-family: var(--font-serif);
+  font-size: 1.1em;
 }
 
 ul, ol {
@@ -164,7 +178,7 @@ li::marker { color: var(--text-subtle); }
 hr {
   border: 0;
   border-top: 1px solid var(--border);
-  margin-block: 2.5em;
+  margin-block: 3em;
 }
 
 /* ---------- Code ---------- */
@@ -176,19 +190,19 @@ code, kbd, samp, pre {
 :not(pre) > code {
   background: var(--bg-code);
   border: 1px solid var(--border-soft);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 0.12em 0.38em;
-  font-size: 0.88em;
+  font-size: 0.86em;
 }
 
 pre {
   background: var(--bg-code);
   border: 1px solid var(--border-soft);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 1rem 1.2rem;
   overflow-x: auto;
   line-height: 1.55;
-  margin-block: 1.4em;
+  margin-block: 1.6em;
 }
 pre code {
   background: transparent;
@@ -197,14 +211,44 @@ pre code {
 }
 
 /* ---------- Utility ---------- */
-.mono { font-family: var(--font-mono); }
+.serif { font-family: var(--font-serif); }
+.sans  { font-family: var(--font-sans); }
+.mono  { font-family: var(--font-mono); }
 .muted { color: var(--text-muted); }
 .subtle { color: var(--text-subtle); }
 .small { font-size: 0.86rem; }
 
+/* Tracked-out uppercase label — the Squarespace meta-style signature. */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+}
+
+/* Hairline centered rule with breathing room. */
+.rule {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--rule);
+  opacity: 0.35;
+  margin: 1.5rem auto;
+  border: 0;
+}
+
+/* Full-width band with alternate background — Squarespace "section" pattern. */
+.band {
+  background: var(--bg-band);
+  padding-block: 4rem;
+  border-block: 1px solid var(--border-soft);
+}
+
 /* ---------- Focus ---------- */
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 3px;
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
 }

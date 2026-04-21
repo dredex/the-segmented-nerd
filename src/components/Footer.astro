@@ -4,32 +4,61 @@ const year = new Date().getFullYear();
 
 <footer>
   <div class="container-wide footer-inner">
-    <span class="muted small mono">© {year} the segmented nerd</span>
-    <span class="muted small mono">
-      <a href="/rss.xml">rss</a>
-    </span>
+    <hr class="rule" />
+    <p class="brand-line">The Segmented Nerd</p>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="/blog">Writing</a>
+      <a href="/about">About</a>
+      <a href="https://github.com/dredex/the-segmented-nerd" target="_blank" rel="noopener">GitHub</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+    <p class="copy eyebrow">© {year} · Written by Josh Green</p>
   </div>
 </footer>
 
 <style>
   footer {
+    padding-block: 3rem 3.5rem;
+    margin-top: 5rem;
     border-top: 1px solid var(--border-soft);
-    padding: 1.5rem 0;
-    margin-top: 3rem;
+    background: var(--bg);
   }
   .footer-inner {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
+    text-align: center;
     gap: 1rem;
   }
-  footer a {
+  .brand-line {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    margin: 0;
+  }
+  .foot-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.3rem;
+    margin-top: 0.2rem;
+  }
+  .foot-nav a {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
     color: var(--text-muted);
     border-bottom: 0;
   }
-  footer a:hover { color: var(--accent); }
-  @media (max-width: 520px) {
-    .footer-inner { flex-direction: column; align-items: flex-start; }
+  .foot-nav a:hover { color: var(--accent); }
+  .copy {
+    margin-top: 0.4rem;
+    font-size: 0.65rem;
+    color: var(--text-subtle);
   }
 </style>
