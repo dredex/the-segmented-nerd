@@ -27,7 +27,7 @@
   <rect class="bg" width="900" height="420" rx="6" />
 
   <!-- Title -->
-  <text class="label muted" x="60" y="48">the collapsing exploitation window</text>
+  <text class="label muted" x="60" y="48">the shrinking exploitation window</text>
 
   <!-- Row 1: exploitation -->
   <text class="label text" x="60" y="98">exploit observed in the wild</text>
