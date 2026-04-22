@@ -40,8 +40,8 @@
 
   <!-- Row 2: change cycle -->
   <text class="label text" x="60" y="232">traditional change-management cycle</text>
-  <rect class="neutral" x="60" y="246" width="720" height="34" rx="2" />
-  <text class="stat text" x="792" y="271">~5–7 days</text>
+  <rect class="neutral" x="60" y="246" width="620" height="34" rx="2" />
+  <text class="stat text" x="692" y="271">~5–7 days</text>
   <text class="caption muted" x="60" y="306">staging → regression → maintenance window → production</text>
 
   <!-- Divider -->
