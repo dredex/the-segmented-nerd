@@ -37,8 +37,8 @@
   <text class="h muted" x="60" y="62">distributed ids / ips  ·  virtual patch signature</text>
 
   <!-- Status pill -->
-  <circle class="dot" cx="708" cy="58" r="4" />
-  <text class="k accent" x="720" y="62">active</text>
+  <circle class="dot" cx="648" cy="58" r="4" />
+  <text class="k accent" x="660" y="62">active</text>
   <text class="small faint" x="848" y="62" text-anchor="end">pushed 3 min ago</text>
 
   <line class="rule" x1="60" y1="78" x2="840" y2="78" />
