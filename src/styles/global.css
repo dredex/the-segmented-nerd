@@ -158,13 +158,12 @@ a:hover {
 }
 
 strong { font-weight: 600; color: var(--text); }
-em { font-style: italic; }
+em { font-style: normal; }
 
 blockquote {
   padding: 0.3em 0 0.3em 1.5em;
   border-left: 2px solid var(--border);
   color: var(--text-muted);
-  font-style: italic;
   font-family: var(--font-serif);
   font-size: 1.1em;
 }
