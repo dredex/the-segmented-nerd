@@ -14,6 +14,7 @@ const isActive = (href: string) =>
     <nav aria-label="Primary">
       <a href="/" class:list={[{ active: isActive("/") }]}>Home</a>
       <a href="/blog" class:list={[{ active: isActive("/blog") }]}>Writing</a>
+      <a href="/news" class:list={[{ active: isActive("/news") }]}>News</a>
       <a href="/about" class:list={[{ active: isActive("/about") }]}>About</a>
       <span class="nav-divider" aria-hidden="true"></span>
       <ThemeToggle />

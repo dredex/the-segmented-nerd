@@ -1,0 +1,341 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+type NewsEntry = CollectionEntry<"news">;
+
+// Pull every non-draft entry, newest first.
+const all = (await getCollection("news", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Window: items from the last ~30 days show in the category sections.
+// Pinned items (e.g. the current SSP build) always surface in the hero
+// and are excluded from the section lists below to avoid duplication.
+const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+const now = Date.now();
+
+const pinned = all.filter((e) => e.data.pinned);
+const recent = all.filter(
+  (e) => !e.data.pinned && now - e.data.pubDate.valueOf() <= THIRTY_DAYS
+);
+
+const byCategory = (cat: NewsEntry["data"]["category"]) =>
+  recent.filter((e) => e.data.category === cat);
+
+const sections: {
+  key: NewsEntry["data"]["category"];
+  eyebrow: string;
+  title: string;
+  blurb: string;
+}[] = [
+  {
+    key: "ssp-build",
+    eyebrow: "Platform",
+    title: "SSP & platform",
+    blurb: "Security Services Platform builds, GA milestones, and what's in flight.",
+  },
+  {
+    key: "release-notes",
+    eyebrow: "Release notes",
+    title: "Release notes roundup",
+    blurb: "vDefend and Avi release notes from the last month — the short version.",
+  },
+  {
+    key: "threat",
+    eyebrow: "Threat & CVE",
+    title: "Threat & CVE watch",
+    blurb: "Disclosures, exploitation-in-the-wild, and KEV additions worth tracking.",
+  },
+  {
+    key: "ecosystem",
+    eyebrow: "Ecosystem",
+    title: "From the ecosystem",
+    blurb: "Notable posts from VMware Security, Broadcom, and the lateral-security community.",
+  },
+];
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+const shortFmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+// Strip protocol for display under each link.
+const hostOf = (url?: string) => {
+  if (!url) return "";
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+};
+---
+
+<BaseLayout
+  title="News"
+  description="What's shipping, what's moving, what to watch — the last month in vDefend and Avi."
+>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">The last 30 days</p>
+      <h1 class="page-title">News</h1>
+      <hr class="rule" />
+      <p class="muted page-deck">
+        What's shipping, what's moving, what to watch — across vDefend, Avi, and
+        the lateral-security ecosystem.
+      </p>
+    </div>
+  </section>
+
+  {pinned.length > 0 && (
+    <section class="container pinned-wrap" aria-label="Pinned">
+      <p class="eyebrow section-eyebrow">Pinned</p>
+      <div class="pinned-grid">
+        {pinned.map((item) => (
+          <article class="pinned-card">
+            <header class="pinned-head">
+              <p class="eyebrow muted">
+                {item.data.version && <span class="version">v{item.data.version}</span>}
+                {item.data.version && item.data.status && <span class="pin-dot"> · </span>}
+                {item.data.status && <span class="status">{item.data.status}</span>}
+              </p>
+              <h2 class="pinned-title">{item.data.title}</h2>
+              <p class="pinned-date eyebrow muted">{fmt(item.data.pubDate)}</p>
+            </header>
+            <p class="pinned-summary">{item.data.summary}</p>
+            {item.data.source && (
+              <p class="pinned-source">
+                <a href={item.data.source} target="_blank" rel="noopener">
+                  {item.data.sourceLabel ?? hostOf(item.data.source)} →
+                </a>
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {sections.map((section) => {
+    const items = byCategory(section.key);
+    if (items.length === 0) return null;
+    return (
+      <section class="container section-wrap" aria-labelledby={`sec-${section.key}`}>
+        <header class="section-head">
+          <p class="eyebrow">{section.eyebrow}</p>
+          <h2 id={`sec-${section.key}`} class="section-title">{section.title}</h2>
+          <hr class="rule" />
+          <p class="muted section-blurb">{section.blurb}</p>
+        </header>
+
+        <ul class="item-list">
+          {items.map((item) => (
+            <li class="item">
+              <time class="eyebrow item-date" datetime={item.data.pubDate.toISOString()}>
+                {shortFmt(item.data.pubDate)}
+              </time>
+              <div class="item-body">
+                <h3 class="item-title">
+                  {item.data.source ? (
+                    <a href={item.data.source} target="_blank" rel="noopener">
+                      {item.data.title}
+                    </a>
+                  ) : (
+                    item.data.title
+                  )}
+                </h3>
+                <p class="item-summary">{item.data.summary}</p>
+                {item.data.source && (
+                  <p class="item-source eyebrow">
+                    {item.data.sourceLabel ?? hostOf(item.data.source)}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+
+  {pinned.length === 0 && recent.length === 0 && (
+    <section class="container empty-wrap">
+      <p class="muted empty">Nothing new in the last month. Check back soon.</p>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: 4rem 3rem;
+    text-align: center;
+  }
+  .page-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    letter-spacing: -0.01em;
+    margin: 0.8rem 0 0;
+  }
+  .page-deck {
+    max-width: 520px;
+    margin-inline: auto;
+    font-size: 1rem;
+  }
+
+  /* Pinned ----------------------------------------------------------------- */
+  .pinned-wrap {
+    padding-block: 1rem 2.5rem;
+  }
+  .section-eyebrow {
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--text-subtle);
+    margin-bottom: 1.2rem;
+  }
+  .pinned-grid {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .pinned-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 2rem 1.8rem 1.8rem;
+    text-align: center;
+  }
+  .pinned-head .eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+  }
+  .version {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .status {
+    color: var(--text-muted);
+  }
+  .pin-dot {
+    color: var(--text-subtle);
+    margin-inline: 0.15em;
+  }
+  .pinned-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    margin: 0.8rem 0 0.4rem;
+    color: var(--text);
+  }
+  .pinned-date {
+    font-size: 0.62rem;
+    margin-top: 0.2rem;
+  }
+  .pinned-summary {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 44ch;
+    margin: 1.2rem auto 0;
+  }
+  .pinned-source {
+    margin-top: 1.3rem;
+    font-size: 0.72rem;
+  }
+  .pinned-source a {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 0;
+  }
+  .pinned-source a:hover { color: var(--accent); }
+
+  /* Section blocks --------------------------------------------------------- */
+  .section-wrap {
+    padding-block: 2.8rem 1.4rem;
+  }
+  .section-head {
+    text-align: center;
+    margin-bottom: 1.4rem;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.75rem;
+    letter-spacing: -0.005em;
+    margin: 0.6rem 0 0;
+  }
+  .section-blurb {
+    font-family: var(--font-serif);
+    max-width: 48ch;
+    margin: 0.4rem auto 0;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  /* Entry list ------------------------------------------------------------- */
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 640px;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1.2rem;
+    padding-block: 1.6rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .item:last-child { border-bottom: 0; }
+
+  .item-date {
+    font-size: 0.62rem;
+    color: var(--text-subtle);
+    padding-top: 0.4rem;
+    text-align: right;
+  }
+  .item-body { min-width: 0; }
+  .item-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 1.12rem;
+    line-height: 1.35;
+    margin: 0 0 0.35rem;
+    color: var(--text);
+  }
+  .item-title a {
+    color: inherit;
+    border-bottom: 0;
+    transition: color 0.15s ease;
+  }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .item-source {
+    margin-top: 0.55rem;
+    font-size: 0.6rem;
+    color: var(--text-subtle);
+  }
+
+  .empty-wrap { padding-block: 3rem 5rem; text-align: center; }
+  .empty { font-size: 1rem; }
+
+  @media (max-width: 560px) {
+    .item {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+    .item-date { text-align: left; padding-top: 0; }
+    .pinned-card { padding: 1.6rem 1.4rem; }
+  }
+</style>
