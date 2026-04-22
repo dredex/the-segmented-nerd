@@ -1,25 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-label="Three time bars contrasting the 10-hour exploitation window for the marimo CVE against a typical 5–7 day change-management cycle, with virtual patch deployment shown as a sliver of minutes.">
   <style>
-    .bg     { fill: #faf9f6; }
-    .text   { fill: #2a2a28; }
-    .muted  { fill: #6e6c66; }
+    .bg     { fill: #faf8f3; }
+    .text   { fill: #1c1b18; }
+    .muted  { fill: #6a6760; }
     .danger { fill: #b84a3e; }
-    .neutral{ fill: #8b867d; }
-    .accent { fill: #5b7a6a; }
-    .axis   { stroke: #d6d2c8; }
+    .neutral{ fill: #918d85; }
+    .accent { fill: #8a6d3b; }
+    .axis   { stroke: #e3ded1; }
 
     .label  { font: 500 12px/1 ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
     .stat   { font: 600 22px ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: -0.01em; }
     .caption{ font: 400 13px Inter, ui-sans-serif, system-ui, sans-serif; }
 
     @media (prefers-color-scheme: dark) {
-      .bg     { fill: #1a1918; }
-      .text   { fill: #e5e3dc; }
-      .muted  { fill: #9b988f; }
+      .bg     { fill: #16140f; }
+      .text   { fill: #ece7d9; }
+      .muted  { fill: #a09a8b; }
       .danger { fill: #d96a5d; }
-      .neutral{ fill: #7a766d; }
-      .accent { fill: #8baa97; }
-      .axis   { stroke: #2f2d2a; }
+      .neutral{ fill: #7a7468; }
+      .accent { fill: #c4a36a; }
+      .axis   { stroke: #2b2821; }
     }
   </style>
 

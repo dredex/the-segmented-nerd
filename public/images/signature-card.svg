@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" aria-label="Illustrative rule card representing a distributed IDS/IPS virtual-patch signature deployed across production workloads.">
   <style>
-    .bg     { fill: #faf9f6; }
-    .panel  { fill: #ffffff; stroke: #e4e0d5; stroke-width: 1; }
-    .rule   { stroke: #e4e0d5; }
-    .text   { fill: #2a2a28; }
-    .muted  { fill: #6e6c66; }
-    .faint  { fill: #9a968c; }
-    .accent { fill: #5b7a6a; }
-    .dot    { fill: #5b7a6a; }
+    .bg     { fill: #faf8f3; }
+    .panel  { fill: #f2efe6; stroke: #e3ded1; stroke-width: 1; }
+    .rule   { stroke: #e3ded1; }
+    .text   { fill: #1c1b18; }
+    .muted  { fill: #6a6760; }
+    .faint  { fill: #918d85; }
+    .accent { fill: #8a6d3b; }
+    .dot    { fill: #8a6d3b; }
 
     .h      { font: 500 12px ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.08em; text-transform: uppercase; }
     .k      { font: 500 13px ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0.04em; }
@@ -16,14 +16,14 @@
     .small  { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; }
 
     @media (prefers-color-scheme: dark) {
-      .bg     { fill: #1a1918; }
-      .panel  { fill: #222120; stroke: #3a3835; }
-      .rule   { stroke: #3a3835; }
-      .text   { fill: #e5e3dc; }
-      .muted  { fill: #9b988f; }
-      .faint  { fill: #6b685f; }
-      .accent { fill: #8baa97; }
-      .dot    { fill: #8baa97; }
+      .bg     { fill: #16140f; }
+      .panel  { fill: #1e1b15; stroke: #2b2821; }
+      .rule   { stroke: #2b2821; }
+      .text   { fill: #ece7d9; }
+      .muted  { fill: #a09a8b; }
+      .faint  { fill: #7a7468; }
+      .accent { fill: #c4a36a; }
+      .dot    { fill: #c4a36a; }
     }
   </style>
 
