@@ -36,7 +36,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-US", {
             </time>
             <h2>{post.data.title}</h2>
             <p class="muted deck">{post.data.description}</p>
-            {post.data.tags?.length > 0 && (
+            {post.data.tags.length > 0 && (
               <p class="eyebrow tags">
                 {post.data.tags.map((tag, i) => (
                   <>

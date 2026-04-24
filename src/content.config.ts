@@ -1,7 +1,7 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-// Matches the frontmatter produced by the vdefend-blog-drafter skill.
+// Long-form essays. Matches the frontmatter produced by the vdefend-blog-drafter skill.
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
   schema: z.object({
@@ -14,20 +14,39 @@ const blog = defineCollection({
   }),
 });
 
+// Short news items — SSP builds, release notes, threat/CVE callouts, ecosystem posts.
 const news = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/news" }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/news" }),
   schema: z.object({
     title: z.string(),
     summary: z.string(),
     pubDate: z.coerce.date(),
     category: z.enum(["ssp-build", "release-notes", "threat", "ecosystem"]),
-    draft: z.boolean().optional().default(false),
-    pinned: z.boolean().optional().default(false),
-    version: z.string().optional(),
-    status: z.string().optional(),
     source: z.string().url().optional(),
     sourceLabel: z.string().optional(),
+    version: z.string().optional(),
+    status: z.string().optional(),
+    pinned: z.boolean().optional().default(false),
+    draft: z.boolean().optional().default(false),
   }),
 });
 
-export const collections = { blog, news };
+// Short feature callouts — one card per new vDefend / Avi / SSP feature.
+const features = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/features" }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    pubDate: z.coerce.date(),
+    product: z.enum(["vDefend", "Avi", "SSP"]).optional(),
+    version: z.string().optional(),
+    screenshot: z.string().optional(),
+    screenshotAlt: z.string().optional(),
+    source: z.string().url().optional(),
+    sourceLabel: z.string().optional(),
+    pinned: z.boolean().optional().default(false),
+    draft: z.boolean().optional().default(false),
+  }),
+});
+
+export const collections = { blog, news, features };
